@@ -60,7 +60,7 @@ impl FromStr for Types {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct Type {
+struct Type {
     #[serde(rename = "@name")]
     name: String,
     nominal: u8,
@@ -77,7 +77,7 @@ pub struct Type {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct Flags {
+struct Flags {
     #[serde(rename = "@count_in_cargo")]
     count_in_cargo: u64,
     #[serde(rename = "@count_in_hoarder")]
@@ -93,7 +93,7 @@ pub struct Flags {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct Named {
+struct Named {
     #[serde(rename = "@name")]
     name: String,
 }
