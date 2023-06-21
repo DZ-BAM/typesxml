@@ -27,11 +27,17 @@ impl Display for Types {
     }
 }
 
+impl From<Vec<Type>> for Types {
+    fn from(types: Vec<Type>) -> Self {
+        Self { types }
+    }
+}
+
 impl<'a> From<HashMap<&'a str, &'a Type>> for Types {
     fn from(types: HashMap<&'a str, &'a Type>) -> Self {
         let mut types: Vec<Type> = types.into_values().cloned().collect();
         types.sort_by(|lhs, rhs| lhs.name.cmp(&rhs.name));
-        Self { types }
+        types.into()
     }
 }
 
