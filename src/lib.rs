@@ -17,15 +17,21 @@ impl Add for Types {
     fn add(self, rhs: Self) -> Self::Output {
         let mut map = HashMap::from(&self);
         map.extend(HashMap::from(&rhs));
-        let mut types: Vec<Type> = map.into_values().cloned().collect();
-        types.sort_by(|lhs, rhs| lhs.name.cmp(&rhs.name));
-        Self { types }
+        map.into()
     }
 }
 
 impl Display for Types {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         quick_xml::se::to_writer(f, self).map_err(std::fmt::Error::custom)
+    }
+}
+
+impl<'a> From<HashMap<&'a str, &'a Type>> for Types {
+    fn from(types: HashMap<&'a str, &'a Type>) -> Self {
+        let mut types: Vec<Type> = types.into_values().cloned().collect();
+        types.sort_by(|lhs, rhs| lhs.name.cmp(&rhs.name));
+        Self { types }
     }
 }
 
