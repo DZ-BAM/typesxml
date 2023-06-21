@@ -4,8 +4,10 @@ use std::process::exit;
 use std::str::FromStr;
 use typesxml::Types;
 
+const DESCRIPTION: &str = "Merge types.xml files for DayZ servers.";
+
 #[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
+#[command(author, version, about, long_about = DESCRIPTION)]
 struct Args {
     #[arg(index = 1)]
     base: String,
