@@ -6,7 +6,7 @@ use typesxml::Types;
 
 const DESCRIPTION: &str = "Merge types.xml files for DayZ servers.";
 
-#[derive(Parser, Debug)]
+#[derive(Debug, Parser)]
 #[command(author, version, about, long_about = DESCRIPTION)]
 struct Args {
     #[arg(index = 1)]
