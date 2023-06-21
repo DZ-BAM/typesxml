@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 clap = { "version" = "4.2.6", features = ["derive"] }
 serde = { version = "1.0.164", features = ["derive"] }
-serde-xml-rs = "0.6.0"
+quick-xml = { version = "0.28.2", features = ["serialize"] }
