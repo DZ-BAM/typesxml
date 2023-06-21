@@ -21,21 +21,7 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let merger = Types::from_str(&read_to_string(args.base).unwrap_or_else(|error| {
-        eprintln!("{}", error);
-        exit(1);
-    }))
-    .unwrap_or_else(|error| {
-        eprintln!("{}", error);
-        exit(2);
-    }) + Types::from_str(&read_to_string(args.extension).unwrap_or_else(|error| {
-        eprintln!("{}", error);
-        exit(1);
-    }))
-    .unwrap_or_else(|error| {
-        eprintln!("{}", error);
-        exit(2);
-    });
+    let merger = load_xml(&args.base) + load_xml(&args.extension);
 
     if let Some(file) = args.output {
         write(file, merger.to_string()).unwrap_or_else(|error| {
@@ -45,4 +31,15 @@ fn main() {
     } else {
         println!("{}", merger);
     }
+}
+
+fn load_xml(filename: &str) -> Types {
+    Types::from_str(&read_to_string(filename).unwrap_or_else(|error| {
+        eprintln!("{}\n{}", filename, error);
+        exit(1);
+    }))
+    .unwrap_or_else(|error| {
+        eprintln!("{} in {}", error, filename);
+        exit(2);
+    })
 }
