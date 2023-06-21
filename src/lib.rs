@@ -25,11 +25,7 @@ impl Add for Types {
 
 impl Display for Types {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            quick_xml::se::to_string(self).map_err(std::fmt::Error::custom)?
-        )
+        quick_xml::se::to_writer(f, self).map_err(std::fmt::Error::custom)
     }
 }
 
