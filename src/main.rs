@@ -21,7 +21,7 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let merger = load_xml(&args.base) + load_xml(&args.extension);
+    let merger = types_from_file(&args.base) + types_from_file(&args.extension);
 
     if let Some(file) = args.output {
         write(file, merger.to_string()).unwrap_or_else(|error| {
@@ -33,7 +33,7 @@ fn main() {
     }
 }
 
-fn load_xml(filename: &str) -> Types {
+fn types_from_file(filename: &str) -> Types {
     Types::from_str(&read_to_string(filename).unwrap_or_else(|error| {
         eprintln!("{}\n{}", filename, error);
         exit(1);
