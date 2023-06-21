@@ -1,7 +1,7 @@
 use clap::Parser;
-use std::fs::{read_to_string, write};
+use from_file::FromFile;
+use std::fs::write;
 use std::process::exit;
-use std::str::FromStr;
 use typesxml::Types;
 
 const DESCRIPTION: &str = "Merge types.xml files for DayZ servers.";
@@ -21,25 +21,26 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let merger = types_from_file(&args.base) + types_from_file(&args.extension);
+    output(
+        read(&args.base) + read(&args.extension),
+        args.output.as_deref(),
+    );
+}
 
-    if let Some(file) = args.output {
-        write(file, merger.to_string()).unwrap_or_else(|error| {
+fn read(filename: &str) -> Types {
+    Types::from_file(filename).unwrap_or_else(|error| {
+        eprintln!("{}\n{}", filename, error);
+        exit(1);
+    })
+}
+
+fn output(types: Types, filename: Option<&str>) {
+    if let Some(filename) = filename {
+        write(filename, types.to_string()).unwrap_or_else(|error| {
             eprintln!("{}", error);
             exit(3);
         })
     } else {
-        println!("{}", merger);
+        println!("{}", types);
     }
-}
-
-fn types_from_file(filename: &str) -> Types {
-    Types::from_str(&read_to_string(filename).unwrap_or_else(|error| {
-        eprintln!("{}\n{}", filename, error);
-        exit(1);
-    }))
-    .unwrap_or_else(|error| {
-        eprintln!("{} in {}", error, filename);
-        exit(2);
-    })
 }

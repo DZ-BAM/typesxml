@@ -1,14 +1,33 @@
+use from_file::{FromFile, FromFileError};
 use serde::ser::Error;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
+use std::fs::write;
 use std::ops::Add;
-use std::str::FromStr;
+use std::path::{Path, PathBuf};
+use write_to_file::WriteToFile;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Types {
     #[serde(rename = "type")]
     types: Vec<Type>,
+}
+
+impl Types {
+    pub fn from_xml_file(input: &str) -> Result<Self, FromFileError> {
+        <Self as FromFile>::get_file_path(input)
+            .and_then(<Self as FromFile>::file_read)
+            .and_then(Self::from_xml_string)
+    }
+
+    pub fn from_xml_string(contents: String) -> Result<Self, FromFileError>
+    where
+        for<'de> Self: Deserialize<'de>,
+    {
+        quick_xml::de::from_str(&contents)
+            .map_err(|error| FromFileError::SerdeError(error.to_string()))
+    }
 }
 
 impl Add for Types {
@@ -51,11 +70,28 @@ impl<'a> From<&'a Types> for HashMap<&'a str, &'a Type> {
     }
 }
 
-impl FromStr for Types {
-    type Err = quick_xml::de::DeError;
+impl FromFile for Types {
+    fn from_file(input: &str) -> Result<Self, FromFileError>
+    where
+        for<'de> Self: Deserialize<'de> + Sized,
+    {
+        let pb = PathBuf::from(input);
+        let ext = pb
+            .extension()
+            .and_then(|ext| ext.to_str())
+            .ok_or(FromFileError::InvalidExtension)?;
+        match ext {
+            "json" => <Self as FromFile>::from_json_file(input),
+            "yml" | "yaml" => <Self as FromFile>::from_yml_file(input),
+            "xml" => Self::from_xml_file(input),
+            _ => Err(FromFileError::InvalidExtension),
+        }
+    }
+}
 
-    fn from_str(xml: &str) -> Result<Self, Self::Err> {
-        quick_xml::de::from_str(xml)
+impl WriteToFile for Types {
+    fn write_to_file<P: AsRef<Path>>(&self, path: P) -> Result<(), std::io::Error> {
+        write(path, self.to_string())
     }
 }
 
