@@ -9,6 +9,7 @@ use std::path::{Path, PathBuf};
 use write_to_file::WriteToFile;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename = "types")]
 pub struct Types {
     #[serde(rename = "type")]
     types: Vec<Type>,
