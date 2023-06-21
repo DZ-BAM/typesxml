@@ -78,6 +78,7 @@ impl Display for Type {
         write!(f, "<min>{}</min>", self.min)?;
         write!(f, "<quantmin>{}</quantmin>", self.quantmin)?;
         write!(f, "<quantmax>{}</quantmax>", self.quantmax)?;
+        write!(f, "<cost>{}</cost>", self.cost)?;
         write!(f, "{}", self.flags)?;
 
         if let Some(category) = &self.category {
