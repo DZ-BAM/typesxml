@@ -1,5 +1,5 @@
 # typesxml
-A [types.xml](https://wiki.dzconfig.com/types/) library and XML files merging utility.
+A [types.xml](https://wiki.dzconfig.com/types/) library and XML files manipulation utility.
 
 ## Prerequisites
 You need to have a [rust](https://www.rust-lang.org/) toolchain installed.
@@ -10,4 +10,4 @@ $ git clone https://github.com/DZ-BAM/typesxml.git
 $ cd typesxml
 $ cargo build --release
 ```
-You'll find the built binary under `target/release/mergetypesxml{.exe}`.
+You'll find the built binary under `target/release/typesxml{.exe}`.
