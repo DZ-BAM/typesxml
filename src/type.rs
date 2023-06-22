@@ -2,7 +2,7 @@ use crate::{Flags, Named, Value};
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Type {
     #[serde(rename = "@name")]
     name: String,
@@ -113,29 +113,29 @@ impl Display for Type {
         }
 
         if let Some(usages) = &self.usages {
-            fmt_slice(f, "usages", usages)?;
+            fmt_iter(f, "usages", usages)?;
         }
 
         if let Some(values) = &self.values {
-            fmt_slice(f, "values", values)?;
+            fmt_iter(f, "values", values)?;
         }
 
         Ok(())
     }
 }
 
-pub(crate) fn fmt_slice<T>(f: &mut Formatter<'_>, prefix: &str, names: &[T]) -> std::fmt::Result
+pub(crate) fn fmt_iter<T>(f: &mut Formatter<'_>, prefix: &str, items: &[T]) -> std::fmt::Result
 where
     T: Display,
 {
     write!(f, "{}:\t[ ", prefix)?;
 
-    for (index, named) in names.iter().enumerate() {
+    for (index, named) in items.iter().enumerate() {
         write!(
             f,
             "{}{}",
             named,
-            if index + 1 < names.len() { ", " } else { "" }
+            if index + 1 < items.len() { ", " } else { "" }
         )?;
     }
 

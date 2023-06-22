@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::ops::Add;
 use std::slice::{Iter, IterMut};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename = "types")]
 pub struct Types {
     #[serde(rename = "type")]

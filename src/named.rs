@@ -3,7 +3,7 @@ use std::convert::Infallible;
 use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct Named {
     #[serde(rename = "@name")]
     pub name: String,

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize, Serializer};
 use std::fmt::{Display, Formatter};
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Flags {
     #[serde(rename = "@count_in_cargo", serialize_with = "as_int")]
     count_in_cargo: bool,
