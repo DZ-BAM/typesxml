@@ -1,6 +1,7 @@
 use crate::util::serialize_slice_non_empty;
-use crate::Type;
+use crate::{raw, Type};
 use serde::{Deserialize, Serialize};
+use serde_rw::{Error, FromFile};
 use std::collections::HashMap;
 use std::ops::Add;
 use std::slice::{Iter, IterMut};
@@ -13,6 +14,10 @@ pub struct Types {
 }
 
 impl Types {
+    pub fn read_gracefully(filename: &str) -> Result<Self, Error> {
+        raw::Types::from_file(filename).map(Self::from)
+    }
+
     pub fn types(&self) -> Iter<Type> {
         self.types.iter()
     }
@@ -47,6 +52,16 @@ impl Add for Types {
         let mut map = HashMap::from(&self);
         map.extend(HashMap::from(&rhs));
         map.into()
+    }
+}
+
+impl From<raw::Types> for Types {
+    fn from(raw: raw::Types) -> Self {
+        Self {
+            types: raw.types.map_or(Vec::new(), |types| {
+                types.into_iter().map(Type::from).collect()
+            }),
+        }
     }
 }
 

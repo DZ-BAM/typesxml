@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use serde_rw::{FromFile, ToFile};
+use serde_rw::ToFile;
 use std::process::exit;
 use typesxml::{Named, Type, Types};
 
@@ -247,7 +247,7 @@ fn set_value(types: &mut Types, name: &str, field_value: FieldValue) {
 }
 
 fn read_types(filename: &str) -> Types {
-    Types::from_file(filename).unwrap_or_else(|error| {
+    Types::read_gracefully(filename).unwrap_or_else(|error| {
         eprintln!("{}\n{}", filename, error);
         exit(1);
     })
