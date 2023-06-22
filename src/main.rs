@@ -41,11 +41,15 @@ enum Action {
     Add {
         #[arg(index = 1, name = "type")]
         name: String,
+        #[arg(long, short)]
+        output: Option<String>,
     },
     #[command(long_about = "Remove an existing type")]
     Remove {
         #[arg(index = 1, name = "type")]
         name: String,
+        #[arg(long, short)]
+        output: Option<String>,
     },
 }
 
@@ -106,10 +110,7 @@ fn main() {
 
     match args.action {
         Action::Merge { extension, output } => {
-            write_type(types + read_types(&extension), output.as_deref()).unwrap_or_else(|error| {
-                eprintln!("{}", error);
-                exit(3);
-            })
+            write_type_or_exit(types + read_types(&extension), output.as_deref())
         }
         Action::Show { name } => {
             for typ in types.types().filter(|typ| {
@@ -124,10 +125,17 @@ fn main() {
             name,
             field_value,
             output,
-        } => set_value(&args.file, &name, field_value, output.as_deref()),
-        Action::Add { name } => types.add(Type::new(name)),
-        Action::Remove { name } => {
+        } => {
+            set_value(&mut types, &name, field_value);
+            write_type_or_exit(types, output.as_deref())
+        }
+        Action::Add { name, output } => {
+            types.add(Type::new(name));
+            write_type_or_exit(types, output.as_deref())
+        }
+        Action::Remove { name, output } => {
             types.remove(&name);
+            write_type_or_exit(types, output.as_deref());
         }
     }
 }
@@ -139,8 +147,7 @@ fn read_types(filename: &str) -> Types {
     })
 }
 
-fn set_value(file: &str, name: &str, field_value: FieldValue, output: Option<&str>) {
-    let mut types = read_types(file);
+fn set_value(types: &mut Types, name: &str, field_value: FieldValue) {
     if let Some(typ) = types
         .mut_types()
         .find(|typ| typ.name.to_ascii_lowercase() == name.to_ascii_lowercase())
@@ -200,14 +207,17 @@ fn set_value(file: &str, name: &str, field_value: FieldValue, output: Option<&st
                 typ.values = values;
             }
         }
-
-        write_type(types, output).unwrap_or_else(|error| {
-            eprintln!("{}", error);
-            exit(3);
-        })
     } else {
-        eprintln!("No such type: {}", name)
+        eprintln!("No such type: {}", name);
+        exit(4);
     }
+}
+
+fn write_type_or_exit(types: Types, filename: Option<&str>) {
+    write_type(types, filename).unwrap_or_else(|error| {
+        eprintln!("{}", error);
+        exit(3);
+    })
 }
 
 fn write_type(types: Types, filename: Option<&str>) -> Result<(), serde_rw::Error> {
