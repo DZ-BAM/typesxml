@@ -1,3 +1,4 @@
+use crate::raw;
 use serde::{Deserialize, Serialize, Serializer};
 use std::fmt::{Display, Formatter};
 
@@ -53,6 +54,31 @@ impl Display for Flags {
         write!(f, "crafted = {}, ", self.crafted)?;
         write!(f, "deloot = {}", self.deloot)?;
         write!(f, " ]")
+    }
+}
+
+impl From<raw::Flags> for Flags {
+    fn from(raw: raw::Flags) -> Self {
+        Self {
+            count_in_cargo: raw
+                .count_in_cargo
+                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
+            count_in_hoarder: raw
+                .count_in_hoarder
+                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
+            count_in_map: raw
+                .count_in_map
+                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
+            count_in_player: raw
+                .count_in_player
+                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
+            crafted: raw
+                .crafted
+                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
+            deloot: raw
+                .deloot
+                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
+        }
     }
 }
 

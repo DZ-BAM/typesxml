@@ -1,9 +1,9 @@
 mod flags;
 mod named;
+mod raw;
 mod r#type;
 mod types;
 mod util;
-mod raw;
 
 pub use flags::Flags;
 pub use named::Named;

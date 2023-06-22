@@ -6,7 +6,17 @@ use std::str::FromStr;
 #[derive(Clone, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct Named {
     #[serde(rename = "@name")]
-    pub name: String,
+    name: String,
+}
+
+impl Named {
+    pub fn new(name: String) -> Self {
+        Self { name }
+    }
+
+    pub fn name(&self) -> &str {
+        self.name.as_str()
+    }
 }
 
 impl Display for Named {
