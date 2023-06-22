@@ -1,7 +1,5 @@
-use serde::ser::Error;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::fmt::{Display, Formatter};
 use std::ops::Add;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -18,12 +16,6 @@ impl Add for Types {
         let mut map = HashMap::from(&self);
         map.extend(HashMap::from(&rhs));
         map.into()
-    }
-}
-
-impl Display for Types {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        quick_xml::se::to_writer(f, self).map_err(std::fmt::Error::custom)
     }
 }
 

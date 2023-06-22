@@ -23,7 +23,11 @@ fn main() {
     output(
         read(&args.base) + read(&args.extension),
         args.output.as_deref(),
-    );
+    )
+    .unwrap_or_else(|error| {
+        eprintln!("{}", error);
+        exit(3);
+    });
 }
 
 fn read(filename: &str) -> Types {
@@ -33,13 +37,10 @@ fn read(filename: &str) -> Types {
     })
 }
 
-fn output(types: Types, filename: Option<&str>) {
+fn output(types: Types, filename: Option<&str>) -> Result<(), serde_rw::Error> {
     if let Some(filename) = filename {
-        types.write_to_file(filename).unwrap_or_else(|error| {
-            eprintln!("{}", error);
-            exit(3);
-        })
+        types.write_to_file(filename)
     } else {
-        println!("{}", types);
+        Ok(println!("{}", types.to_xml()?))
     }
 }
