@@ -1,12 +1,12 @@
-use crate::Tier;
 use serde::{Deserialize, Serialize};
+use std::convert::Infallible;
 use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Value {
     #[serde(rename = "@name")]
-    name: Tier,
+    name: String,
 }
 
 impl Display for Value {
@@ -16,11 +16,11 @@ impl Display for Value {
 }
 
 impl FromStr for Value {
-    type Err = String;
+    type Err = Infallible;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(Self {
-            name: Tier::from_str(s)?,
+            name: s.to_string(),
         })
     }
 }
