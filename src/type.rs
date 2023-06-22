@@ -1,4 +1,4 @@
-use crate::{fmt_vec, Flags, Named, Value};
+use crate::{Flags, Named, Value};
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
@@ -113,13 +113,31 @@ impl Display for Type {
         }
 
         if let Some(usages) = &self.usages {
-            fmt_vec(f, usages)?;
+            fmt_slice(f, usages)?;
         }
 
         if let Some(values) = &self.values {
-            fmt_vec(f, values)?;
+            fmt_slice(f, values)?;
         }
 
         Ok(())
     }
+}
+
+pub(crate) fn fmt_slice<T>(f: &mut Formatter<'_>, names: &[T]) -> std::fmt::Result
+where
+    T: Display,
+{
+    write!(f, "usages:\t[ ")?;
+
+    for (index, named) in names.iter().enumerate() {
+        write!(
+            f,
+            "{}{}",
+            named,
+            if index + 1 < names.len() { ", " } else { "" }
+        )?;
+    }
+
+    writeln!(f, " ]")
 }
