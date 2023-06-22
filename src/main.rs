@@ -64,11 +64,11 @@ enum FieldValue {
     #[command(long_about = "The item's name.")]
     Name { name: String },
     #[command(long_about = "Maximum amount of items of this type on the server.")]
-    Nominal { nominal: u8 },
+    Nominal { nominal: Option<u8> },
     #[command(long_about = "Despawn time in seconds.")]
     Lifetime { lifetime: u32 },
     #[command(long_about = "Respawn cooldown in seconds.")]
-    Restock { restock: u32 },
+    Restock { restock: Option<u32> },
     #[command(
         long_about = "Minimum amount for this item to spawn. Must be less than or equal to nominal."
     )]
@@ -76,13 +76,13 @@ enum FieldValue {
     #[command(
         long_about = "Minimum amount within the item e.g a water bottle or magazine. Use -1 if item doesnt hold a quantity of something."
     )]
-    Quantmin { quantmin: i64 },
+    Quantmin { quantmin: Option<i64> },
     #[command(
         long_about = "Maximum amount within the item e.g a water bottle or magazine. Use -1 if item doesnt hold a quantity of something."
     )]
     Quantmax { quantmax: i64 },
     #[command(long_about = "The spawn chance, similar to a priority system.")]
-    Cost { cost: u32 },
+    Cost { cost: Option<u32> },
     #[command(long_about = "What to take into consideration for nominal and min values.")]
     Flags {
         #[command(subcommand)]

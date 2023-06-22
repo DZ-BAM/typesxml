@@ -7,13 +7,13 @@ use std::fmt::{Display, Formatter};
 pub struct Type {
     #[serde(rename = "@name")]
     name: String,
-    nominal: u8,
+    nominal: Option<u8>,
     lifetime: u32,
-    restock: u32,
+    restock: Option<u32>,
     min: u8,
-    quantmin: i64,
+    quantmin: Option<i64>,
     quantmax: i64,
-    cost: u32,
+    cost: Option<u32>,
     flags: Flags,
     category: Option<Named>,
     #[serde(rename = "usage", serialize_with = "serialize_optional_vec_non_empty")]
@@ -26,13 +26,13 @@ impl Type {
     pub fn new(name: String) -> Self {
         Self {
             name,
-            nominal: 0,
+            nominal: None,
             lifetime: 0,
-            restock: 0,
+            restock: None,
             min: 0,
-            quantmin: 0,
+            quantmin: None,
             quantmax: 0,
-            cost: 0,
+            cost: None,
             flags: Flags::default(),
             category: None,
             usages: None,
@@ -52,7 +52,7 @@ impl Type {
         self.name = name;
     }
 
-    pub fn set_nominal(&mut self, nominal: u8) {
+    pub fn set_nominal(&mut self, nominal: Option<u8>) {
         self.nominal = nominal;
     }
 
@@ -60,7 +60,7 @@ impl Type {
         self.lifetime = lifetime;
     }
 
-    pub fn set_restock(&mut self, restock: u32) {
+    pub fn set_restock(&mut self, restock: Option<u32>) {
         self.restock = restock;
     }
 
@@ -68,7 +68,7 @@ impl Type {
         self.min = min;
     }
 
-    pub fn set_quantmin(&mut self, quantmin: i64) {
+    pub fn set_quantmin(&mut self, quantmin: Option<i64>) {
         self.quantmin = quantmin;
     }
 
@@ -76,7 +76,7 @@ impl Type {
         self.quantmax = quantmax;
     }
 
-    pub fn set_cost(&mut self, cost: u32) {
+    pub fn set_cost(&mut self, cost: Option<u32>) {
         self.cost = cost;
     }
 
@@ -100,13 +100,29 @@ impl Type {
 impl Display for Type {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "name:\t{}", self.name)?;
-        writeln!(f, "nominal:\t{}", self.nominal)?;
+
+        if let Some(nominal) = self.nominal {
+            writeln!(f, "nominal:\t{}", nominal)?;
+        }
+
         writeln!(f, "lifetime:\t{}", self.lifetime)?;
-        writeln!(f, "restock:\t{}", self.restock)?;
+
+        if let Some(restock) = self.restock {
+            writeln!(f, "restock:\t{}", restock)?;
+        }
+
         writeln!(f, "min:\t{}", self.min)?;
-        writeln!(f, "quantmin:\t{}", self.quantmin)?;
+
+        if let Some(quantmin) = self.quantmin {
+            writeln!(f, "quantmin:\t{}", quantmin)?;
+        }
+
         writeln!(f, "quantmax:\t{}", self.quantmax)?;
-        writeln!(f, "cost:\t{}", self.cost)?;
+
+        if let Some(cost) = self.cost {
+            writeln!(f, "cost:\t{}", cost)?;
+        }
+
         writeln!(f, "flags:\t{}", self.flags)?;
 
         if let Some(category) = &self.category {
