@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 use serde_rw::{FromFile, ToFile};
 use std::process::exit;
-use typesxml::{Named, Type, Types};
+use typesxml::{Named, Type, Types, Value};
 
 const DESCRIPTION: &str = "Merge types.xml files for DayZ servers.";
 
@@ -55,52 +55,56 @@ enum Action {
 
 #[derive(Clone, Debug, Subcommand)]
 enum FieldValue {
-    Name {
-        name: String,
-    },
-    Nominal {
-        nominal: u8,
-    },
-    Lifetime {
-        lifetime: u32,
-    },
-    Restock {
-        restock: u32,
-    },
-    Min {
-        min: u8,
-    },
-    Quantmin {
-        quantmin: i64,
-    },
-    Quantmax {
-        quantmax: i64,
-    },
-    Cost {
-        cost: u32,
-    },
+    #[command(long_about = "The item's name.")]
+    Name { name: String },
+    #[command(long_about = "Maximum amount of items of this type on the server.")]
+    Nominal { nominal: u8 },
+    #[command(long_about = "Despawn time in seconds.")]
+    Lifetime { lifetime: u32 },
+    #[command(long_about = "Respawn cooldown in seconds.")]
+    Restock { restock: u32 },
+    #[command(
+        long_about = "Minimum amount for this item to spawn. Must be less than or equal to nominal."
+    )]
+    Min { min: u8 },
+    #[command(
+        long_about = "Minimum amount within the item e.g a water bottle or magazine. Use -1 if item doesnt hold a quantity of something."
+    )]
+    Quantmin { quantmin: i64 },
+    #[command(
+        long_about = "Maximum amount within the item e.g a water bottle or magazine. Use -1 if item doesnt hold a quantity of something."
+    )]
+    Quantmax { quantmax: i64 },
+    #[command(long_about = "The spawn chance, similar to a priority system.")]
+    Cost { cost: u32 },
+    #[command(long_about = "What to take into consideration for nominal and min values.")]
     Flags {
         #[command(subcommand)]
         flags: FlagValues,
     },
-    Category {
-        category: Option<Named>,
-    },
-    Usages {
-        usages: Option<Vec<Named>>,
-    },
-    Values {
-        values: Option<Vec<Named>>,
-    },
+    #[command(long_about = "Item category group.")]
+    Category { category: Option<Named> },
+    #[command(long_about = "Area for where the item will spawn e.g farm. You can have up to 4.")]
+    Usages { usages: Option<Vec<Named>> },
+    #[command(
+        long_about = "Item value grouping. Tier1 (Spawn zones) through to Tier4 (Military)."
+    )]
+    Values { values: Option<Vec<Value>> },
 }
 
 #[derive(Clone, Debug, Subcommand)]
 enum FlagValues {
+    #[command(long_about = "Includes items in cargo (backpacks, crates, cars).")]
     CountInCargo { count_in_cargo: bool },
+    #[command(long_about = "Includes items in cargo (tents, barrels, stashes etc).")]
     CountInHoarder { count_in_hoarder: bool },
+    #[command(long_about = "Includes items inside buildings.")]
     CountInMap { count_in_map: bool },
+    #[command(long_about = "Includes items in players inventory.")]
     CountInPlayer { count_in_player: bool },
+    #[command(long_about = "Item must be craftable by a player.")]
     Crafted { crafted: bool },
+    #[command(long_about = "Dynamic event loot such as a heli crash.")]
     DeLoot { deloot: bool },
 }
 

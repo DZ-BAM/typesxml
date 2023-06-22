@@ -1,4 +1,5 @@
-use serde::{Deserialize, Serialize, Serializer};
+use serde::de::Visitor;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::fmt::{Display, Formatter};
@@ -87,7 +88,7 @@ pub struct Type {
     #[serde(rename = "usage")]
     usages: Option<Vec<Named>>,
     #[serde(rename = "value")]
-    values: Option<Vec<Named>>,
+    values: Option<Vec<Value>>,
 }
 
 impl Type {
@@ -160,7 +161,7 @@ impl Type {
         self.usages = usages;
     }
 
-    pub fn set_values(&mut self, values: Option<Vec<Named>>) {
+    pub fn set_values(&mut self, values: Option<Vec<Value>>) {
         self.values = values;
     }
 }
@@ -182,11 +183,11 @@ impl Display for Type {
         }
 
         if let Some(usages) = &self.usages {
-            write_names(f, usages)?;
+            fmt_vec(f, usages)?;
         }
 
         if let Some(values) = &self.values {
-            write_names(f, values)?;
+            fmt_vec(f, values)?;
         }
 
         Ok(())
@@ -254,6 +255,12 @@ pub struct Named {
     pub name: String,
 }
 
+impl Display for Named {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
+}
+
 impl FromStr for Named {
     type Err = Infallible;
 
@@ -264,14 +271,111 @@ impl FromStr for Named {
     }
 }
 
-fn write_names(f: &mut Formatter<'_>, names: &[Named]) -> std::fmt::Result {
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct Value {
+    #[serde(rename = "@name")]
+    name: Tier,
+}
+
+impl Display for Value {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
+}
+
+impl FromStr for Value {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(Self {
+            name: Tier::from_str(s)?,
+        })
+    }
+}
+
+#[derive(Clone, Debug)]
+pub enum Tier {
+    Tier1,
+    Tier2,
+    Tier3,
+    Tier4,
+}
+
+impl<'de> Deserialize<'de> for Tier {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct TierVisitor;
+
+        impl<'de> Visitor<'de> for TierVisitor {
+            type Value = Tier;
+
+            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+                formatter.write_str("Tier1, Tier2, Tier3 or Tier4")
+            }
+
+            fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                Tier::from_str(value).map_err(E::custom)
+            }
+        }
+
+        deserializer.deserialize_str(TierVisitor)
+    }
+}
+
+impl Display for Tier {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Tier1 => "Tier1",
+                Self::Tier2 => "Tier2",
+                Self::Tier3 => "Tier3",
+                Self::Tier4 => "Tier4",
+            }
+        )
+    }
+}
+
+impl FromStr for Tier {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Tier1" => Ok(Self::Tier1),
+            "Tier2" => Ok(Self::Tier2),
+            "Tier3" => Ok(Self::Tier3),
+            "Tier4" => Ok(Self::Tier4),
+            _ => Err(format!("Invalid tier: {}", s)),
+        }
+    }
+}
+
+impl Serialize for Tier {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(&self.to_string())
+    }
+}
+
+fn fmt_vec<T>(f: &mut Formatter<'_>, names: &[T]) -> std::fmt::Result
+where
+    T: Display,
+{
     write!(f, "usages:\t[ ")?;
 
     for (index, named) in names.iter().enumerate() {
         write!(
             f,
             "{}{}",
-            named.name,
+            named,
             if index + 1 < names.len() { ", " } else { "" }
         )?;
     }
