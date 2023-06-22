@@ -1,5 +1,5 @@
 use crate::raw;
-use crate::util::as_int;
+use crate::util::{as_int, parse_bool_or_false};
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
@@ -61,24 +61,12 @@ impl Display for Flags {
 impl From<raw::Flags> for Flags {
     fn from(raw: raw::Flags) -> Self {
         Self {
-            count_in_cargo: raw
-                .count_in_cargo
-                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
-            count_in_hoarder: raw
-                .count_in_hoarder
-                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
-            count_in_map: raw
-                .count_in_map
-                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
-            count_in_player: raw
-                .count_in_player
-                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
-            crafted: raw
-                .crafted
-                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
-            deloot: raw
-                .deloot
-                .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
+            count_in_cargo: raw.count_in_cargo.map_or(false, parse_bool_or_false),
+            count_in_hoarder: raw.count_in_hoarder.map_or(false, parse_bool_or_false),
+            count_in_map: raw.count_in_map.map_or(false, parse_bool_or_false),
+            count_in_player: raw.count_in_player.map_or(false, parse_bool_or_false),
+            crafted: raw.crafted.map_or(false, parse_bool_or_false),
+            deloot: raw.deloot.map_or(false, parse_bool_or_false),
         }
     }
 }
