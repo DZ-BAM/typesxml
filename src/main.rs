@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use regex::Regex;
 use serde_rw::{FromFile, ToFile};
 use std::process::exit;
 use typesxml::{Named, Type, Types};
@@ -25,10 +26,10 @@ enum Action {
         #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
         output: Option<String>,
     },
-    #[command(long_about = "Show the selected type's properties")]
-    Show {
+    #[command(long_about = "Display the selected type's properties")]
+    Find {
         #[arg(index = 1, name = "type")]
-        name: String,
+        regex: Regex,
     },
     #[command(long_about = "Set the selected type's properties")]
     Set {
@@ -125,12 +126,8 @@ fn main() {
             types + read_types(&extension, args.strict),
             output.as_deref(),
         ),
-        Action::Show { name } => {
-            for typ in types.types().filter(|typ| {
-                typ.get_name()
-                    .to_ascii_lowercase()
-                    .contains(&name.to_ascii_lowercase())
-            }) {
+        Action::Find { regex } => {
+            for typ in types.types().filter(|typ| regex.is_match(typ.get_name())) {
                 println!("{}", typ)
             }
         }
