@@ -80,7 +80,7 @@ enum FieldValue {
     #[command(
         long_about = "Maximum amount within the item e.g a water bottle or magazine. Use -1 if item doesnt hold a quantity of something."
     )]
-    Quantmax { quantmax: Option<i64> },
+    Quantmax { quantmax: i64 },
     #[command(long_about = "The spawn chance, similar to a priority system.")]
     Cost { cost: Option<u32> },
     #[command(long_about = "What to take into consideration for nominal and min values.")]
