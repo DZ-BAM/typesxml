@@ -74,20 +74,20 @@ impl<'a> From<&'a Types> for HashMap<&'a str, &'a Type> {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Type {
     #[serde(rename = "@name")]
-    pub name: String,
-    pub nominal: u8,
-    pub lifetime: u32,
-    pub restock: u32,
-    pub min: u8,
-    pub quantmin: i64,
-    pub quantmax: i64,
-    pub cost: u32,
-    pub flags: Flags,
-    pub category: Option<Named>,
+    name: String,
+    nominal: u8,
+    lifetime: u32,
+    restock: u32,
+    min: u8,
+    quantmin: i64,
+    quantmax: i64,
+    cost: u32,
+    flags: Flags,
+    category: Option<Named>,
     #[serde(rename = "usage")]
-    pub usages: Option<Vec<Named>>,
+    usages: Option<Vec<Named>>,
     #[serde(rename = "value")]
-    pub values: Option<Vec<Named>>,
+    values: Option<Vec<Named>>,
 }
 
 impl Type {
@@ -106,6 +106,62 @@ impl Type {
             usages: None,
             values: None,
         }
+    }
+
+    pub fn get_name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn mut_flags(&mut self) -> &mut Flags {
+        &mut self.flags
+    }
+
+    pub fn set_name(&mut self, name: String) {
+        self.name = name;
+    }
+
+    pub fn set_nominal(&mut self, nominal: u8) {
+        self.nominal = nominal;
+    }
+
+    pub fn set_lifetime(&mut self, lifetime: u32) {
+        self.lifetime = lifetime;
+    }
+
+    pub fn set_restock(&mut self, restock: u32) {
+        self.restock = restock;
+    }
+
+    pub fn set_min(&mut self, min: u8) {
+        self.min = min;
+    }
+
+    pub fn set_quantmin(&mut self, quantmin: i64) {
+        self.quantmin = quantmin;
+    }
+
+    pub fn set_quantmax(&mut self, quantmax: i64) {
+        self.quantmax = quantmax;
+    }
+
+    pub fn set_cost(&mut self, cost: u32) {
+        self.cost = cost;
+    }
+
+    pub fn set_flags(&mut self, flags: Flags) {
+        self.flags = flags;
+    }
+
+    pub fn set_category(&mut self, category: Option<Named>) {
+        self.category = category;
+    }
+
+    pub fn set_usages(&mut self, usages: Option<Vec<Named>>) {
+        self.usages = usages;
+    }
+
+    pub fn set_values(&mut self, values: Option<Vec<Named>>) {
+        self.values = values;
     }
 }
 
@@ -140,17 +196,43 @@ impl Display for Type {
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Flags {
     #[serde(rename = "@count_in_cargo")]
-    pub count_in_cargo: u64,
+    count_in_cargo: u64,
     #[serde(rename = "@count_in_hoarder")]
-    pub count_in_hoarder: u64,
+    count_in_hoarder: u64,
     #[serde(rename = "@count_in_map")]
-    pub count_in_map: u64,
+    count_in_map: u64,
     #[serde(rename = "@count_in_player")]
-    pub count_in_player: u64,
+    count_in_player: u64,
     #[serde(rename = "@crafted")]
-    pub crafted: u64,
+    crafted: u64,
     #[serde(rename = "@deloot")]
-    pub deloot: u64,
+    deloot: u64,
+}
+
+impl Flags {
+    pub fn set_count_in_cargo(&mut self, count_in_cargo: u64) {
+        self.count_in_cargo = count_in_cargo;
+    }
+
+    pub fn set_count_in_hoarder(&mut self, count_in_hoarder: u64) {
+        self.count_in_hoarder = count_in_hoarder;
+    }
+
+    pub fn set_count_in_map(&mut self, count_in_map: u64) {
+        self.count_in_map = count_in_map;
+    }
+
+    pub fn set_count_in_player(&mut self, count_in_player: u64) {
+        self.count_in_player = count_in_player;
+    }
+
+    pub fn set_crafted(&mut self, crafted: u64) {
+        self.crafted = crafted;
+    }
+
+    pub fn set_deloot(&mut self, deloot: u64) {
+        self.deloot = deloot;
+    }
 }
 
 impl Display for Flags {

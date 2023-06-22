@@ -114,7 +114,7 @@ fn main() {
         }
         Action::Show { name } => {
             for typ in types.types().filter(|typ| {
-                typ.name
+                typ.get_name()
                     .to_ascii_lowercase()
                     .contains(&name.to_ascii_lowercase())
             }) {
@@ -150,61 +150,61 @@ fn read_types(filename: &str) -> Types {
 fn set_value(types: &mut Types, name: &str, field_value: FieldValue) {
     if let Some(typ) = types
         .mut_types()
-        .find(|typ| typ.name.to_ascii_lowercase() == name.to_ascii_lowercase())
+        .find(|typ| typ.get_name().to_ascii_lowercase() == name.to_ascii_lowercase())
     {
         match field_value {
             FieldValue::Name { name } => {
-                typ.name = name;
+                typ.set_name(name);
             }
             FieldValue::Nominal { nominal } => {
-                typ.nominal = nominal;
+                typ.set_nominal(nominal);
             }
             FieldValue::Lifetime { lifetime } => {
-                typ.lifetime = lifetime;
+                typ.set_lifetime(lifetime);
             }
             FieldValue::Restock { restock } => {
-                typ.restock = restock;
+                typ.set_restock(restock);
             }
             FieldValue::Min { min } => {
-                typ.min = min;
+                typ.set_min(min);
             }
             FieldValue::Quantmin { quantmin } => {
-                typ.quantmin = quantmin;
+                typ.set_quantmin(quantmin);
             }
             FieldValue::Quantmax { quantmax } => {
-                typ.quantmax = quantmax;
+                typ.set_quantmax(quantmax);
             }
             FieldValue::Cost { cost } => {
-                typ.cost = cost;
+                typ.set_cost(cost);
             }
             FieldValue::Flags { flags } => match flags {
                 FlagValues::CountInCargo { count_in_cargo } => {
-                    typ.flags.count_in_cargo = count_in_cargo;
+                    typ.mut_flags().set_count_in_cargo(count_in_cargo);
                 }
                 FlagValues::CountInHoarder { count_in_hoarder } => {
-                    typ.flags.count_in_hoarder = count_in_hoarder;
+                    typ.mut_flags().set_count_in_hoarder(count_in_hoarder);
                 }
                 FlagValues::CountInMap { count_in_map } => {
-                    typ.flags.count_in_map = count_in_map;
+                    typ.mut_flags().set_count_in_map(count_in_map);
                 }
                 FlagValues::CountInPlayer { count_in_player } => {
-                    typ.flags.count_in_player = count_in_player;
+                    typ.mut_flags().set_count_in_player(count_in_player);
                 }
                 FlagValues::Crafted { crafted } => {
-                    typ.flags.crafted = crafted;
+                    typ.mut_flags().set_crafted(crafted);
                 }
                 FlagValues::DeLoot { deloot } => {
-                    typ.flags.deloot = deloot;
+                    typ.mut_flags().set_deloot(deloot);
                 }
             },
             FieldValue::Category { category } => {
-                typ.category = category;
+                typ.set_category(category);
             }
             FieldValue::Usages { usages } => {
-                typ.usages = usages;
+                typ.set_usages(usages);
             }
             FieldValue::Values { values } => {
-                typ.values = values;
+                typ.set_values(values);
             }
         }
     } else {
