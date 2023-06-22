@@ -1,6 +1,5 @@
 use clap::Parser;
-use from_file::FromFile;
-use std::fs::write;
+use serde_rw::{FromFile, ToFile};
 use std::process::exit;
 use typesxml::Types;
 
@@ -36,7 +35,7 @@ fn read(filename: &str) -> Types {
 
 fn output(types: Types, filename: Option<&str>) {
     if let Some(filename) = filename {
-        write(filename, types.to_string()).unwrap_or_else(|error| {
+        types.write_to_file(filename).unwrap_or_else(|error| {
             eprintln!("{}", error);
             exit(3);
         })
