@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 use serde_rw::{FromFile, ToFile};
 use std::process::exit;
-use typesxml::{Named, Type, Types, Value};
+use typesxml::{Named, Type, Types};
 
 const DESCRIPTION: &str = "Manipulate types.xml files for DayZ servers.";
 
@@ -95,7 +95,7 @@ enum FieldValue {
     #[command(
         long_about = "Item value grouping. Tier1 (Spawn zones) through to Tier4 (Military)."
     )]
-    Values { values: Option<Vec<Value>> },
+    Values { values: Option<Vec<Named>> },
 }
 
 #[derive(Clone, Debug, Subcommand)]

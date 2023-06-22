@@ -1,5 +1,5 @@
 use crate::util::{fmt_slice, serialize_optional_vec_non_empty};
-use crate::{Flags, Named, Value};
+use crate::{Flags, Named};
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
@@ -19,7 +19,7 @@ pub struct Type {
     #[serde(rename = "usage", serialize_with = "serialize_optional_vec_non_empty")]
     usages: Option<Vec<Named>>,
     #[serde(rename = "value", serialize_with = "serialize_optional_vec_non_empty")]
-    values: Option<Vec<Value>>,
+    values: Option<Vec<Named>>,
 }
 
 impl Type {
@@ -92,7 +92,7 @@ impl Type {
         self.usages = usages;
     }
 
-    pub fn set_values(&mut self, values: Option<Vec<Value>>) {
+    pub fn set_values(&mut self, values: Option<Vec<Named>>) {
         self.values = values;
     }
 }
