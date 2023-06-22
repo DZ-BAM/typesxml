@@ -12,7 +12,7 @@ pub struct Type {
     restock: Option<u32>,
     min: Option<u8>,
     quantmin: Option<i64>,
-    quantmax: i64,
+    quantmax: Option<i64>,
     cost: Option<u32>,
     flags: Flags,
     category: Option<Named>,
@@ -31,7 +31,7 @@ impl Type {
             restock: None,
             min: None,
             quantmin: None,
-            quantmax: 0,
+            quantmax: None,
             cost: None,
             flags: Flags::default(),
             category: None,
@@ -72,7 +72,7 @@ impl Type {
         self.quantmin = quantmin;
     }
 
-    pub fn set_quantmax(&mut self, quantmax: i64) {
+    pub fn set_quantmax(&mut self, quantmax: Option<i64>) {
         self.quantmax = quantmax;
     }
 
@@ -119,7 +119,9 @@ impl Display for Type {
             writeln!(f, "quantmin:\t{}", quantmin)?;
         }
 
-        writeln!(f, "quantmax:\t{}", self.quantmax)?;
+        if let Some(quantmax) = self.quantmax {
+            writeln!(f, "quantmax:\t{}", quantmax)?;
+        }
 
         if let Some(cost) = self.cost {
             writeln!(f, "cost:\t{}", cost)?;
