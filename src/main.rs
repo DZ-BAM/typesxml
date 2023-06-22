@@ -36,6 +36,8 @@ enum Action {
         field_value: FieldValue,
         #[arg(long, short)]
         output: Option<String>,
+        #[arg(long, short)]
+        in_place: bool,
     },
     #[command(long_about = "Add a new type")]
     Add {
@@ -43,6 +45,8 @@ enum Action {
         name: String,
         #[arg(long, short)]
         output: Option<String>,
+        #[arg(long, short)]
+        in_place: bool,
     },
     #[command(long_about = "Remove an existing type")]
     Remove {
@@ -50,6 +54,8 @@ enum Action {
         name: String,
         #[arg(long, short)]
         output: Option<String>,
+        #[arg(long, short)]
+        in_place: bool,
     },
 }
 
@@ -129,17 +135,47 @@ fn main() {
             name,
             field_value,
             output,
+            in_place,
         } => {
             set_value(&mut types, &name, field_value);
-            write_type_or_exit(types, output.as_deref())
+            write_type_or_exit(
+                types,
+                if in_place {
+                    Some(args.file.as_str())
+                } else {
+                    output.as_deref()
+                },
+            )
         }
-        Action::Add { name, output } => {
+        Action::Add {
+            name,
+            output,
+            in_place,
+        } => {
             types.add(Type::new(name));
-            write_type_or_exit(types, output.as_deref())
+            write_type_or_exit(
+                types,
+                if in_place {
+                    Some(args.file.as_str())
+                } else {
+                    output.as_deref()
+                },
+            )
         }
-        Action::Remove { name, output } => {
+        Action::Remove {
+            name,
+            output,
+            in_place,
+        } => {
             types.remove(&name);
-            write_type_or_exit(types, output.as_deref());
+            write_type_or_exit(
+                types,
+                if in_place {
+                    Some(args.file.as_str())
+                } else {
+                    output.as_deref()
+                },
+            );
         }
     }
 }
