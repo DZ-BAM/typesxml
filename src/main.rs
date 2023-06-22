@@ -3,7 +3,7 @@ use serde_rw::{FromFile, ToFile};
 use std::process::exit;
 use typesxml::{Named, Type, Types, Value};
 
-const DESCRIPTION: &str = "Merge types.xml files for DayZ servers.";
+const DESCRIPTION: &str = "Manipulate types.xml files for DayZ servers.";
 
 #[derive(Debug, Parser)]
 #[command(author, version, about, long_about = DESCRIPTION)]
