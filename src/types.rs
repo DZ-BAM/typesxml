@@ -1,3 +1,4 @@
+use crate::util::serialize_slice_non_empty;
 use crate::Type;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -7,7 +8,7 @@ use std::slice::{Iter, IterMut};
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename = "types")]
 pub struct Types {
-    #[serde(rename = "type")]
+    #[serde(rename = "type", serialize_with = "serialize_slice_non_empty")]
     types: Vec<Type>,
 }
 

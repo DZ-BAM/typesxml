@@ -1,3 +1,4 @@
+use crate::util::{fmt_iter, serialize_optional_vec_non_empty};
 use crate::{Flags, Named, Value};
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
@@ -15,9 +16,9 @@ pub struct Type {
     cost: u32,
     flags: Flags,
     category: Option<Named>,
-    #[serde(rename = "usage")]
+    #[serde(rename = "usage", serialize_with = "serialize_optional_vec_non_empty")]
     usages: Option<Vec<Named>>,
-    #[serde(rename = "value")]
+    #[serde(rename = "value", serialize_with = "serialize_optional_vec_non_empty")]
     values: Option<Vec<Value>>,
 }
 
@@ -122,22 +123,4 @@ impl Display for Type {
 
         Ok(())
     }
-}
-
-pub(crate) fn fmt_iter<T>(f: &mut Formatter<'_>, prefix: &str, items: &[T]) -> std::fmt::Result
-where
-    T: Display,
-{
-    write!(f, "{}:\t[ ", prefix)?;
-
-    for (index, named) in items.iter().enumerate() {
-        write!(
-            f,
-            "{}{}",
-            named,
-            if index + 1 < items.len() { ", " } else { "" }
-        )?;
-    }
-
-    writeln!(f, " ]")
 }
