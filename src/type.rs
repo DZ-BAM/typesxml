@@ -113,22 +113,22 @@ impl Display for Type {
         }
 
         if let Some(usages) = &self.usages {
-            fmt_slice(f, usages)?;
+            fmt_slice(f, "usages", usages)?;
         }
 
         if let Some(values) = &self.values {
-            fmt_slice(f, values)?;
+            fmt_slice(f, "values", values)?;
         }
 
         Ok(())
     }
 }
 
-pub(crate) fn fmt_slice<T>(f: &mut Formatter<'_>, names: &[T]) -> std::fmt::Result
+pub(crate) fn fmt_slice<T>(f: &mut Formatter<'_>, prefix: &str, names: &[T]) -> std::fmt::Result
 where
     T: Display,
 {
-    write!(f, "usages:\t[ ")?;
+    write!(f, "{}:\t[ ", prefix)?;
 
     for (index, named) in names.iter().enumerate() {
         write!(
