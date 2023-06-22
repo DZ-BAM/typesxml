@@ -10,7 +10,7 @@ pub struct Type {
     nominal: Option<u8>,
     lifetime: u32,
     restock: Option<u32>,
-    min: u8,
+    min: Option<u8>,
     quantmin: Option<i64>,
     quantmax: i64,
     cost: Option<u32>,
@@ -29,7 +29,7 @@ impl Type {
             nominal: None,
             lifetime: 0,
             restock: None,
-            min: 0,
+            min: None,
             quantmin: None,
             quantmax: 0,
             cost: None,
@@ -64,7 +64,7 @@ impl Type {
         self.restock = restock;
     }
 
-    pub fn set_min(&mut self, min: u8) {
+    pub fn set_min(&mut self, min: Option<u8>) {
         self.min = min;
     }
 
@@ -111,7 +111,9 @@ impl Display for Type {
             writeln!(f, "restock:\t{}", restock)?;
         }
 
-        writeln!(f, "min:\t{}", self.min)?;
+        if let Some(min) = self.min {
+            writeln!(f, "min:\t{}", min)?;
+        }
 
         if let Some(quantmin) = self.quantmin {
             writeln!(f, "quantmin:\t{}", quantmin)?;

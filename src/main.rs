@@ -72,7 +72,7 @@ enum FieldValue {
     #[command(
         long_about = "Minimum amount for this item to spawn. Must be less than or equal to nominal."
     )]
-    Min { min: u8 },
+    Min { min: Option<u8> },
     #[command(
         long_about = "Minimum amount within the item e.g a water bottle or magazine. Use -1 if item doesnt hold a quantity of something."
     )]
