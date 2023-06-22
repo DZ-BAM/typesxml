@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, Serializer};
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::fmt::{Display, Formatter};
@@ -195,42 +195,42 @@ impl Display for Type {
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Flags {
-    #[serde(rename = "@count_in_cargo")]
-    count_in_cargo: u64,
-    #[serde(rename = "@count_in_hoarder")]
-    count_in_hoarder: u64,
-    #[serde(rename = "@count_in_map")]
-    count_in_map: u64,
-    #[serde(rename = "@count_in_player")]
-    count_in_player: u64,
-    #[serde(rename = "@crafted")]
-    crafted: u64,
-    #[serde(rename = "@deloot")]
-    deloot: u64,
+    #[serde(rename = "@count_in_cargo", serialize_with = "as_int")]
+    count_in_cargo: bool,
+    #[serde(rename = "@count_in_hoarder", serialize_with = "as_int")]
+    count_in_hoarder: bool,
+    #[serde(rename = "@count_in_map", serialize_with = "as_int")]
+    count_in_map: bool,
+    #[serde(rename = "@count_in_player", serialize_with = "as_int")]
+    count_in_player: bool,
+    #[serde(rename = "@crafted", serialize_with = "as_int")]
+    crafted: bool,
+    #[serde(rename = "@deloot", serialize_with = "as_int")]
+    deloot: bool,
 }
 
 impl Flags {
-    pub fn set_count_in_cargo(&mut self, count_in_cargo: u64) {
+    pub fn set_count_in_cargo(&mut self, count_in_cargo: bool) {
         self.count_in_cargo = count_in_cargo;
     }
 
-    pub fn set_count_in_hoarder(&mut self, count_in_hoarder: u64) {
+    pub fn set_count_in_hoarder(&mut self, count_in_hoarder: bool) {
         self.count_in_hoarder = count_in_hoarder;
     }
 
-    pub fn set_count_in_map(&mut self, count_in_map: u64) {
+    pub fn set_count_in_map(&mut self, count_in_map: bool) {
         self.count_in_map = count_in_map;
     }
 
-    pub fn set_count_in_player(&mut self, count_in_player: u64) {
+    pub fn set_count_in_player(&mut self, count_in_player: bool) {
         self.count_in_player = count_in_player;
     }
 
-    pub fn set_crafted(&mut self, crafted: u64) {
+    pub fn set_crafted(&mut self, crafted: bool) {
         self.crafted = crafted;
     }
 
-    pub fn set_deloot(&mut self, deloot: u64) {
+    pub fn set_deloot(&mut self, deloot: bool) {
         self.deloot = deloot;
     }
 }
@@ -277,4 +277,11 @@ fn write_names(f: &mut Formatter<'_>, names: &[Named]) -> std::fmt::Result {
     }
 
     writeln!(f, " ]")
+}
+
+fn as_int<S>(value: &bool, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    serializer.serialize_u8(u8::from(*value))
 }

@@ -96,12 +96,12 @@ enum FieldValue {
 
 #[derive(Clone, Debug, Subcommand)]
 enum FlagValues {
-    CountInCargo { count_in_cargo: u64 },
-    CountInHoarder { count_in_hoarder: u64 },
-    CountInMap { count_in_map: u64 },
-    CountInPlayer { count_in_player: u64 },
-    Crafted { crafted: u64 },
-    DeLoot { deloot: u64 },
+    CountInCargo { count_in_cargo: bool },
+    CountInHoarder { count_in_hoarder: bool },
+    CountInMap { count_in_map: bool },
+    CountInPlayer { count_in_player: bool },
+    Crafted { crafted: bool },
+    DeLoot { deloot: bool },
 }
 
 fn main() {
