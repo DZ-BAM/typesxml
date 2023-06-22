@@ -27,7 +27,7 @@ where
     writeln!(f, " ]")
 }
 
-pub(crate) fn serialize_optional_vec_non_empty<T, S>(
+pub(crate) fn as_nonempty_optional_vec<T, S>(
     items: &Option<Vec<T>>,
     serializer: S,
 ) -> Result<S::Ok, S::Error>
@@ -35,10 +35,10 @@ where
     T: Display + Serialize,
     S: Serializer,
 {
-    serialize_slice_non_empty(items.as_deref().unwrap_or(&Vec::new()), serializer)
+    as_nonempty_slice(items.as_deref().unwrap_or(&Vec::new()), serializer)
 }
 
-pub(crate) fn serialize_slice_non_empty<T, S>(items: &[T], serializer: S) -> Result<S::Ok, S::Error>
+pub(crate) fn as_nonempty_slice<T, S>(items: &[T], serializer: S) -> Result<S::Ok, S::Error>
 where
     T: Display + Serialize,
     S: Serializer,
