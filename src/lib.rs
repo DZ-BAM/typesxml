@@ -5,10 +5,11 @@ mod r#type;
 mod types;
 mod value;
 
+use std::fmt::{Display, Formatter};
+
 pub use flags::Flags;
 pub use named::Named;
 pub use r#type::Type;
-use std::fmt::{Display, Formatter};
 pub use tier::Tier;
 pub use types::Types;
 pub use value::Value;
