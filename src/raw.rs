@@ -4,7 +4,7 @@ use serde::Deserialize;
 #[serde(rename = "types")]
 pub struct Types {
     #[serde(rename = "type", serialize_with = "serialize_slice_non_empty")]
-    types: Vec<Type>,
+    types: Option<Vec<Type>>,
 }
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 pub struct Type {
@@ -22,7 +22,7 @@ pub struct Type {
     #[serde(rename = "usage", serialize_with = "serialize_optional_vec_non_empty")]
     usages: Option<Vec<Named>>,
     #[serde(rename = "value", serialize_with = "serialize_optional_vec_non_empty")]
-    values: Option<Vec<Value>>,
+    values: Option<Vec<Named>>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq)]
