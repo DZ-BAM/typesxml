@@ -99,19 +99,19 @@ impl Type {
 
 impl Display for Type {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "name:\t{}", self.name)?;
+        writeln!(f, "name    :\t{}", self.name)?;
 
         if let Some(nominal) = self.nominal {
-            writeln!(f, "nominal:\t{}", nominal)?;
+            writeln!(f, "nominal :\t{}", nominal)?;
         }
 
         writeln!(f, "lifetime:\t{}", self.lifetime)?;
 
         if let Some(restock) = self.restock {
-            writeln!(f, "restock:\t{}", restock)?;
+            writeln!(f, "restock :\t{}", restock)?;
         }
 
-        writeln!(f, "min:\t{}", self.min)?;
+        writeln!(f, "min     :\t{}", self.min)?;
 
         if let Some(quantmin) = self.quantmin {
             writeln!(f, "quantmin:\t{}", quantmin)?;
@@ -120,21 +120,21 @@ impl Display for Type {
         writeln!(f, "quantmax:\t{}", self.quantmax)?;
 
         if let Some(cost) = self.cost {
-            writeln!(f, "cost:\t{}", cost)?;
+            writeln!(f, "cost    :\t{}", cost)?;
         }
 
-        writeln!(f, "flags:\t{}", self.flags)?;
+        writeln!(f, "flags   :\t{}", self.flags)?;
 
         if let Some(category) = &self.category {
             writeln!(f, "category:\t{}", category.name())?;
         }
 
         if let Some(usages) = &self.usages {
-            fmt_slice(f, "usages", usages)?;
+            fmt_slice(f, "usages  ", usages)?;
         }
 
         if let Some(values) = &self.values {
-            fmt_slice(f, "values", values)?;
+            fmt_slice(f, "values  ", values)?;
         }
 
         Ok(())
