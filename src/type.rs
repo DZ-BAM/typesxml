@@ -1,4 +1,4 @@
-use crate::util::{fmt_iter, serialize_optional_vec_non_empty};
+use crate::util::{fmt_slice, serialize_optional_vec_non_empty};
 use crate::{Flags, Named, Value};
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
@@ -114,11 +114,11 @@ impl Display for Type {
         }
 
         if let Some(usages) = &self.usages {
-            fmt_iter(f, "usages", usages)?;
+            fmt_slice(f, "usages", usages)?;
         }
 
         if let Some(values) = &self.values {
-            fmt_iter(f, "values", values)?;
+            fmt_slice(f, "values", values)?;
         }
 
         Ok(())

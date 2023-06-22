@@ -2,7 +2,7 @@ use serde::ser::SerializeSeq;
 use serde::{Serialize, Serializer};
 use std::fmt::{Display, Formatter};
 
-pub(crate) fn fmt_iter<T>(f: &mut Formatter<'_>, prefix: &str, items: &[T]) -> std::fmt::Result
+pub(crate) fn fmt_slice<T>(f: &mut Formatter<'_>, prefix: &str, items: &[T]) -> std::fmt::Result
 where
     T: Display,
 {
