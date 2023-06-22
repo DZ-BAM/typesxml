@@ -1,4 +1,4 @@
-use crate::util::{as_nonempty_optional_vec, fmt_slice};
+use crate::util::{as_nonempty_optional, as_nonempty_optional_vec, fmt_slice};
 use crate::{raw, Flags, Named};
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
@@ -7,14 +7,19 @@ use std::fmt::{Display, Formatter};
 pub struct Type {
     #[serde(rename = "@name")]
     name: String,
+    #[serde(serialize_with = "as_nonempty_optional")]
     nominal: Option<u8>,
     lifetime: u32,
+    #[serde(serialize_with = "as_nonempty_optional")]
     restock: Option<u32>,
     min: u8,
+    #[serde(serialize_with = "as_nonempty_optional")]
     quantmin: Option<i64>,
     quantmax: i64,
+    #[serde(serialize_with = "as_nonempty_optional")]
     cost: Option<u32>,
     flags: Flags,
+    #[serde(serialize_with = "as_nonempty_optional")]
     category: Option<Named>,
     #[serde(rename = "usage", serialize_with = "as_nonempty_optional_vec")]
     usages: Option<Vec<Named>>,
