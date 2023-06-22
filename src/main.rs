@@ -180,13 +180,6 @@ fn main() {
     }
 }
 
-fn read_types(filename: &str) -> Types {
-    Types::from_file(filename).unwrap_or_else(|error| {
-        eprintln!("{}\n{}", filename, error);
-        exit(1);
-    })
-}
-
 fn set_value(types: &mut Types, name: &str, field_value: FieldValue) {
     if let Some(typ) = types
         .mut_types()
@@ -251,6 +244,13 @@ fn set_value(types: &mut Types, name: &str, field_value: FieldValue) {
         eprintln!("No such type: {}", name);
         exit(4);
     }
+}
+
+fn read_types(filename: &str) -> Types {
+    Types::from_file(filename).unwrap_or_else(|error| {
+        eprintln!("{}\n{}", filename, error);
+        exit(1);
+    })
 }
 
 fn write_type_or_exit(types: Types, filename: Option<&str>) {
