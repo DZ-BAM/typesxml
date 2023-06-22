@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use serde_rw::ToFile;
+use serde_rw::{FromFile, ToFile};
 use std::process::exit;
 use typesxml::{Named, Type, Types};
 
@@ -12,6 +12,8 @@ struct Args {
     file: String,
     #[command(subcommand)]
     action: Action,
+    #[arg(long, short)]
+    strict: bool,
 }
 
 #[derive(Clone, Debug, Subcommand)]
@@ -116,12 +118,13 @@ enum FlagValues {
 
 fn main() {
     let args = Args::parse();
-    let mut types = read_types(&args.file);
+    let mut types = read_types(&args.file, args.strict);
 
     match args.action {
-        Action::Merge { extension, output } => {
-            write_type_or_exit(types + read_types(&extension), output.as_deref())
-        }
+        Action::Merge { extension, output } => write_type_or_exit(
+            types + read_types(&extension, args.strict),
+            output.as_deref(),
+        ),
         Action::Show { name } => {
             for typ in types.types().filter(|typ| {
                 typ.get_name()
@@ -246,8 +249,13 @@ fn set_value(types: &mut Types, name: &str, field_value: FieldValue) {
     }
 }
 
-fn read_types(filename: &str) -> Types {
-    Types::read_gracefully(filename).unwrap_or_else(|error| {
+fn read_types(filename: &str, strict: bool) -> Types {
+    if strict {
+        Types::from_file(filename)
+    } else {
+        Types::read_gracefully(filename)
+    }
+    .unwrap_or_else(|error| {
         eprintln!("{}\n{}", filename, error);
         exit(1);
     })
