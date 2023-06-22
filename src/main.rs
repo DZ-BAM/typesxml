@@ -12,7 +12,7 @@ struct Args {
     file: String,
     #[command(subcommand)]
     action: Action,
-    #[arg(long, short)]
+    #[arg(long, short, help = "Parse XML files in strict mode")]
     strict: bool,
 }
 
