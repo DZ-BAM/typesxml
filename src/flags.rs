@@ -1,5 +1,6 @@
 use crate::raw;
-use serde::{Deserialize, Serialize, Serializer};
+use crate::util::as_int;
+use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
@@ -80,11 +81,4 @@ impl From<raw::Flags> for Flags {
                 .map_or(false, |s| s.parse::<bool>().unwrap_or(false)),
         }
     }
-}
-
-fn as_int<S>(value: &bool, serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    serializer.serialize_u8(u8::from(*value))
 }

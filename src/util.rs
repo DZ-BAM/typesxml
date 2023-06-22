@@ -2,6 +2,13 @@ use serde::ser::SerializeSeq;
 use serde::{Serialize, Serializer};
 use std::fmt::{Display, Formatter};
 
+pub(crate) fn as_int<S>(value: &bool, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    serializer.serialize_u8(u8::from(*value))
+}
+
 pub(crate) fn fmt_slice<T>(f: &mut Formatter<'_>, prefix: &str, items: &[T]) -> std::fmt::Result
 where
     T: Display,
