@@ -22,7 +22,7 @@ enum Action {
     Merge {
         #[arg(index = 1)]
         extension: String,
-        #[arg(long, short)]
+        #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
         output: Option<String>,
     },
     #[command(long_about = "Show the selected type's properties")]
@@ -36,18 +36,18 @@ enum Action {
         name: String,
         #[command(subcommand)]
         field_value: FieldValue,
-        #[arg(long, short)]
+        #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
         output: Option<String>,
-        #[arg(long, short)]
+        #[arg(long, short, help = "Write result to the original file")]
         in_place: bool,
     },
     #[command(long_about = "Add a new type")]
     Add {
         #[arg(index = 1, name = "type")]
         name: String,
-        #[arg(long, short)]
+        #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
         output: Option<String>,
-        #[arg(long, short)]
+        #[arg(long, short, help = "Write result to the original file")]
         in_place: bool,
     },
     #[command(long_about = "Remove an existing type")]
