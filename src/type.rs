@@ -28,6 +28,7 @@ pub struct Type {
 }
 
 impl Type {
+    #[must_use]
     pub fn new(name: String) -> Self {
         Self {
             name,
@@ -45,10 +46,12 @@ impl Type {
         }
     }
 
+    #[must_use]
     pub fn get_name(&self) -> &str {
         &self.name
     }
 
+    #[must_use]
     pub fn mut_flags(&mut self) -> &mut Flags {
         &mut self.flags
     }
@@ -107,25 +110,25 @@ impl Display for Type {
         writeln!(f, "name    :\t{}", self.name)?;
 
         if let Some(nominal) = self.nominal {
-            writeln!(f, "nominal :\t{}", nominal)?;
+            writeln!(f, "nominal :\t{nominal}")?;
         }
 
         writeln!(f, "lifetime:\t{}", self.lifetime)?;
 
         if let Some(restock) = self.restock {
-            writeln!(f, "restock :\t{}", restock)?;
+            writeln!(f, "restock :\t{restock}")?;
         }
 
         writeln!(f, "min     :\t{}", self.min)?;
 
         if let Some(quantmin) = self.quantmin {
-            writeln!(f, "quantmin:\t{}", quantmin)?;
+            writeln!(f, "quantmin:\t{quantmin}")?;
         }
 
         writeln!(f, "quantmax:\t{}", self.quantmax)?;
 
         if let Some(cost) = self.cost {
-            writeln!(f, "cost    :\t{}", cost)?;
+            writeln!(f, "cost    :\t{cost}")?;
         }
 
         writeln!(f, "flags   :\t{}", self.flags)?;
@@ -165,7 +168,7 @@ impl From<raw::Type> for Type {
                 .and_then(|quantmax| quantmax.parse::<i64>().ok())
                 .unwrap_or(0),
             cost: raw.cost.and_then(|cost| cost.parse::<u32>().ok()),
-            flags: raw.flags.map_or(Flags::default(), Flags::from),
+            flags: raw.flags.map_or_else(Flags::default, Flags::from),
             category: raw
                 .category
                 .and_then(|category| category.name.map(Named::new)),

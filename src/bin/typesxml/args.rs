@@ -6,7 +6,7 @@ const DESCRIPTION: &str = "Manipulate types.xml files for DayZ servers.";
 
 #[derive(Debug, Parser)]
 #[command(author, version, about, long_about = DESCRIPTION)]
-pub(crate) struct CLIArgs {
+pub struct Arguments {
     #[arg(index = 1)]
     pub(crate) file: String,
     #[command(subcommand)]
@@ -14,23 +14,23 @@ pub(crate) struct CLIArgs {
 }
 
 #[derive(Clone, Debug, Subcommand)]
-pub(crate) enum Action {
+pub enum Action {
     #[command(long_about = "Add a new type")]
-    Add(AddArgs),
+    Add(Add),
     #[command(long_about = "Display the selected type's properties")]
-    Find(FindArgs),
+    Find(Find),
     #[command(long_about = "Fix errors in the given file")]
     Fix,
     #[command(long_about = "Merge an extension XML file into the base XML file")]
-    Merge(MergeArgs),
+    Merge(Merge),
     #[command(long_about = "Remove an existing type")]
-    Remove(RemoveArgs),
+    Remove(Remove),
     #[command(long_about = "Set the selected type's properties")]
-    Set(SetArgs),
+    Set(Set),
 }
 
 #[derive(Clone, Debug, Subcommand)]
-pub(crate) enum FieldValue {
+pub enum FieldValue {
     #[command(long_about = "The item's name.")]
     Name { name: String },
     #[command(long_about = "Maximum amount of items of this type on the server.")]
@@ -69,7 +69,7 @@ pub(crate) enum FieldValue {
 }
 
 #[derive(Clone, Debug, Subcommand)]
-pub(crate) enum FlagValues {
+pub enum FlagValues {
     #[command(long_about = "Includes items in cargo (backpacks, crates, cars).")]
     CountInCargo { count_in_cargo: bool },
     #[command(long_about = "Includes items in cargo (tents, barrels, stashes etc).")]
@@ -85,7 +85,7 @@ pub(crate) enum FlagValues {
 }
 
 #[derive(Clone, Debug, Args)]
-pub(crate) struct AddArgs {
+pub struct Add {
     #[arg(index = 1, name = "type")]
     pub(crate) name: String,
     #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
@@ -95,13 +95,13 @@ pub(crate) struct AddArgs {
 }
 
 #[derive(Clone, Debug, Args)]
-pub(crate) struct FindArgs {
+pub struct Find {
     #[arg(index = 1, name = "type")]
     pub(crate) regex: Regex,
 }
 
 #[derive(Clone, Debug, Args)]
-pub(crate) struct MergeArgs {
+pub struct Merge {
     #[arg(index = 1)]
     pub(crate) extension: String,
     #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
@@ -109,7 +109,7 @@ pub(crate) struct MergeArgs {
 }
 
 #[derive(Clone, Debug, Args)]
-pub(crate) struct RemoveArgs {
+pub struct Remove {
     #[arg(index = 1, name = "type")]
     pub(crate) name: String,
     #[arg(long, short)]
@@ -119,7 +119,7 @@ pub(crate) struct RemoveArgs {
 }
 
 #[derive(Clone, Debug, Args)]
-pub(crate) struct SetArgs {
+pub struct Set {
     #[arg(index = 1, name = "type")]
     pub(crate) name: String,
     #[command(subcommand)]

@@ -31,7 +31,7 @@ impl Types {
             .iter()
             .any(|existing| existing.get_name() == typ.get_name())
         {
-            self.types.push(typ)
+            self.types.push(typ);
         }
     }
 

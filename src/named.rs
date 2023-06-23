@@ -10,10 +10,12 @@ pub struct Named {
 }
 
 impl Named {
-    pub fn new(name: String) -> Self {
+    #[must_use]
+    pub const fn new(name: String) -> Self {
         Self { name }
     }
 
+    #[must_use]
     pub fn name(&self) -> &str {
         self.name.as_str()
     }

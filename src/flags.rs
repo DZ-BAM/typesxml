@@ -61,12 +61,18 @@ impl Display for Flags {
 impl From<raw::Flags> for Flags {
     fn from(raw: raw::Flags) -> Self {
         Self {
-            count_in_cargo: raw.count_in_cargo.map_or(false, parse_bool_or_false),
-            count_in_hoarder: raw.count_in_hoarder.map_or(false, parse_bool_or_false),
-            count_in_map: raw.count_in_map.map_or(false, parse_bool_or_false),
-            count_in_player: raw.count_in_player.map_or(false, parse_bool_or_false),
-            crafted: raw.crafted.map_or(false, parse_bool_or_false),
-            deloot: raw.deloot.map_or(false, parse_bool_or_false),
+            count_in_cargo: raw
+                .count_in_cargo
+                .map_or(false, |s| parse_bool_or_false(&s)),
+            count_in_hoarder: raw
+                .count_in_hoarder
+                .map_or(false, |s| parse_bool_or_false(&s)),
+            count_in_map: raw.count_in_map.map_or(false, |s| parse_bool_or_false(&s)),
+            count_in_player: raw
+                .count_in_player
+                .map_or(false, |s| parse_bool_or_false(&s)),
+            crafted: raw.crafted.map_or(false, |s| parse_bool_or_false(&s)),
+            deloot: raw.deloot.map_or(false, |s| parse_bool_or_false(&s)),
         }
     }
 }

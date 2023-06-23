@@ -2,12 +2,12 @@ use serde::Deserialize;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 #[serde(rename = "types")]
-pub(crate) struct Types {
+pub struct Types {
     #[serde(rename = "type")]
     pub(crate) types: Option<Vec<Type>>,
 }
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
-pub(crate) struct Type {
+pub struct Type {
     #[serde(rename = "@name")]
     pub(crate) name: String,
     pub(crate) nominal: Option<String>,
@@ -26,7 +26,7 @@ pub(crate) struct Type {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq)]
-pub(crate) struct Flags {
+pub struct Flags {
     #[serde(rename = "@count_in_cargo")]
     pub(crate) count_in_cargo: Option<String>,
     #[serde(rename = "@count_in_hoarder")]
@@ -42,7 +42,7 @@ pub(crate) struct Flags {
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
-pub(crate) struct Named {
+pub struct Named {
     #[serde(rename = "@name")]
     pub(crate) name: Option<String>,
 }
