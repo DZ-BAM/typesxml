@@ -153,15 +153,17 @@ impl From<raw::Type> for Type {
             nominal: raw.nominal.and_then(|nominal| nominal.parse::<u8>().ok()),
             lifetime: raw
                 .lifetime
-                .map_or(0, |lifetime| lifetime.parse::<u32>().unwrap_or(0)),
+                .and_then(|lifetime| lifetime.parse::<u32>().ok())
+                .unwrap_or(0),
             restock: raw.restock.and_then(|restock| restock.parse::<u32>().ok()),
-            min: raw.min.map_or(0, |min| min.parse::<u8>().unwrap_or(0)),
+            min: raw.min.and_then(|min| min.parse::<u8>().ok()).unwrap_or(0),
             quantmin: raw
                 .quantmin
                 .and_then(|quantmin| quantmin.parse::<i64>().ok()),
             quantmax: raw
                 .quantmax
-                .map_or(0, |quantmax| quantmax.parse::<i64>().unwrap_or(0)),
+                .and_then(|quantmax| quantmax.parse::<i64>().ok())
+                .unwrap_or(0),
             cost: raw.cost.and_then(|cost| cost.parse::<u32>().ok()),
             flags: raw.flags.map_or(Flags::default(), Flags::from),
             category: raw
