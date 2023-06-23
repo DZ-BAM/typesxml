@@ -19,6 +19,20 @@ struct Args {
 
 #[derive(Clone, Debug, Subcommand)]
 enum Action {
+    #[command(long_about = "Add a new type")]
+    Add {
+        #[arg(index = 1, name = "type")]
+        name: String,
+        #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
+        output: Option<String>,
+        #[arg(long, short, help = "Write result to the original file")]
+        in_place: bool,
+    },
+    #[command(long_about = "Display the selected type's properties")]
+    Find {
+        #[arg(index = 1, name = "type")]
+        regex: Regex,
+    },
     #[command(long_about = "Merge an extension XML file into the base XML file")]
     Merge {
         #[arg(index = 1)]
@@ -26,10 +40,14 @@ enum Action {
         #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
         output: Option<String>,
     },
-    #[command(long_about = "Display the selected type's properties")]
-    Find {
+    #[command(long_about = "Remove an existing type")]
+    Remove {
         #[arg(index = 1, name = "type")]
-        regex: Regex,
+        name: String,
+        #[arg(long, short)]
+        output: Option<String>,
+        #[arg(long, short)]
+        in_place: bool,
     },
     #[command(long_about = "Set the selected type's properties")]
     Set {
@@ -40,24 +58,6 @@ enum Action {
         #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
         output: Option<String>,
         #[arg(long, short, help = "Write result to the original file")]
-        in_place: bool,
-    },
-    #[command(long_about = "Add a new type")]
-    Add {
-        #[arg(index = 1, name = "type")]
-        name: String,
-        #[arg(long, short, help = "Write result to the given file instead of STDOUT")]
-        output: Option<String>,
-        #[arg(long, short, help = "Write result to the original file")]
-        in_place: bool,
-    },
-    #[command(long_about = "Remove an existing type")]
-    Remove {
-        #[arg(index = 1, name = "type")]
-        name: String,
-        #[arg(long, short)]
-        output: Option<String>,
-        #[arg(long, short)]
         in_place: bool,
     },
 }
