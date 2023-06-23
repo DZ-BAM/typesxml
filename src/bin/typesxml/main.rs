@@ -1,7 +1,6 @@
 mod args;
 
-use crate::args::{Action, FieldValue, FlagValues};
-use args::CLIArgs;
+use args::{Action, CLIArgs, FieldValue, FlagValues};
 use clap::Parser;
 use serde_rw::{FromFile, ToFile};
 use std::process::exit;
