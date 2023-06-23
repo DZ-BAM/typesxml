@@ -13,8 +13,6 @@ struct Args {
     file: String,
     #[command(subcommand)]
     action: Action,
-    #[arg(long, short, help = "Parse XML files in strict mode")]
-    strict: bool,
 }
 
 #[derive(Clone, Debug, Subcommand)]
@@ -33,6 +31,8 @@ enum Action {
         #[arg(index = 1, name = "type")]
         regex: Regex,
     },
+    #[command(long_about = "Fix errors in the given file")]
+    Fix,
     #[command(long_about = "Merge an extension XML file into the base XML file")]
     Merge {
         #[arg(index = 1)]
@@ -119,39 +119,14 @@ enum FlagValues {
 
 fn main() {
     let args = Args::parse();
-    let mut types = read_types(&args.file, args.strict);
 
     match args.action {
-        Action::Merge { extension, output } => write_type_or_exit(
-            types + read_types(&extension, args.strict),
-            output.as_deref(),
-        ),
-        Action::Find { regex } => {
-            for typ in types.types().filter(|typ| regex.is_match(typ.get_name())) {
-                println!("{}", typ)
-            }
-        }
-        Action::Set {
-            name,
-            field_value,
-            output,
-            in_place,
-        } => {
-            set_value(&mut types, &name, field_value);
-            write_type_or_exit(
-                types,
-                if in_place {
-                    Some(args.file.as_str())
-                } else {
-                    output.as_deref()
-                },
-            )
-        }
         Action::Add {
             name,
             output,
             in_place,
         } => {
+            let mut types = read_types_or_exit(&args.file, true);
             types.add(Type::new(name));
             write_type_or_exit(
                 types,
@@ -162,11 +137,25 @@ fn main() {
                 },
             )
         }
+        Action::Find { regex } => {
+            for typ in read_types_or_exit(&args.file, true)
+                .types()
+                .filter(|typ| regex.is_match(typ.get_name()))
+            {
+                println!("{}", typ)
+            }
+        }
+        Action::Fix => write_type_or_exit(read_types_or_exit(&args.file, false), Some(&args.file)),
+        Action::Merge { extension, output } => write_type_or_exit(
+            read_types_or_exit(&args.file, true) + read_types_or_exit(&extension, true),
+            output.as_deref(),
+        ),
         Action::Remove {
             name,
             output,
             in_place,
         } => {
+            let mut types = read_types_or_exit(&args.file, true);
             types.remove(&name);
             write_type_or_exit(
                 types,
@@ -176,6 +165,23 @@ fn main() {
                     output.as_deref()
                 },
             );
+        }
+        Action::Set {
+            name,
+            field_value,
+            output,
+            in_place,
+        } => {
+            let mut types = read_types_or_exit(&args.file, true);
+            set_value(&mut types, &name, field_value);
+            write_type_or_exit(
+                types,
+                if in_place {
+                    Some(args.file.as_str())
+                } else {
+                    output.as_deref()
+                },
+            )
         }
     }
 }
@@ -246,7 +252,7 @@ fn set_value(types: &mut Types, name: &str, field_value: FieldValue) {
     }
 }
 
-fn read_types(filename: &str, strict: bool) -> Types {
+fn read_types_or_exit(filename: &str, strict: bool) -> Types {
     if strict {
         Types::from_file(filename)
     } else {
@@ -259,16 +265,13 @@ fn read_types(filename: &str, strict: bool) -> Types {
 }
 
 fn write_type_or_exit(types: Types, filename: Option<&str>) {
-    write_type(types, filename).unwrap_or_else(|error| {
-        eprintln!("{}", error);
-        exit(3);
-    })
-}
-
-fn write_type(types: Types, filename: Option<&str>) -> Result<(), serde_rw::Error> {
     if let Some(filename) = filename {
         types.write_to_file(filename)
     } else {
-        Ok(println!("{}", types.to_xml()?))
+        types.to_xml().map(|types| println!("{}", types))
     }
+    .unwrap_or_else(|error| {
+        eprintln!("{}", error);
+        exit(3);
+    })
 }
