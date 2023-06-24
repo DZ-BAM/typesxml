@@ -1,7 +1,6 @@
 use crate::{raw, Type};
 use serde::{Deserialize, Serialize};
 use serde_rw::{Error, FromFile};
-use std::collections::HashMap;
 use std::ops::Add;
 use std::slice::{Iter, IterMut};
 
@@ -13,6 +12,15 @@ pub struct Types {
 }
 
 impl Types {
+    /// Parse the types.xml gracefully
+    ///
+    /// This corrects common formatting errors but may also lead to data loss.
+    ///
+    /// # Arguments
+    /// * `filename` - The path to the file to read.
+    ///
+    /// # Errors
+    /// Returns a `serde::rw::Error` if the deserialization fails.
     pub fn read_gracefully(filename: &str) -> Result<Self, Error> {
         raw::Types::from_file(filename).map(Self::from)
     }
@@ -48,9 +56,11 @@ impl Add for Types {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
-        let mut map = HashMap::from(&self);
-        map.extend(HashMap::from(&rhs));
-        map.into()
+        let mut types = self.types;
+        types.extend(rhs.types);
+        types.sort_by(|lhs, rhs| lhs.get_name().cmp(rhs.get_name()));
+        types.dedup_by(|lhs, rhs| lhs.get_name().eq(rhs.get_name()));
+        Self { types }
     }
 }
 
@@ -67,23 +77,5 @@ impl From<raw::Types> for Types {
 impl From<Vec<Type>> for Types {
     fn from(types: Vec<Type>) -> Self {
         Self { types }
-    }
-}
-
-impl<'a> From<HashMap<&'a str, &'a Type>> for Types {
-    fn from(types: HashMap<&'a str, &'a Type>) -> Self {
-        let mut types: Vec<Type> = types.into_values().cloned().collect();
-        types.sort_by(|lhs, rhs| lhs.get_name().cmp(rhs.get_name()));
-        types.into()
-    }
-}
-
-impl<'a> From<&'a Types> for HashMap<&'a str, &'a Type> {
-    fn from(types: &'a Types) -> Self {
-        types
-            .types
-            .iter()
-            .map(|typ| (typ.get_name(), typ))
-            .collect()
     }
 }

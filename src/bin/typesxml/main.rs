@@ -2,7 +2,7 @@ mod args;
 
 use args::{Action, Arguments, FieldValue, FlagValues};
 use clap::Parser;
-use serde_rw::{FromFile, ToFile};
+use serde_rw::{FromFile, ToFile, ToXml};
 use std::process::exit;
 use typesxml::{Type, Types};
 
