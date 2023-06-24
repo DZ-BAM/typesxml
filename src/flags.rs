@@ -3,6 +3,7 @@ use crate::util::{as_int, parse_bool_or_false};
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
+#[allow(clippy::struct_excessive_bools)]
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Flags {
     #[serde(rename = "@count_in_cargo", serialize_with = "as_int")]

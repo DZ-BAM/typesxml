@@ -1,6 +1,7 @@
 use serde::Serializer;
 use std::fmt::{Display, Formatter};
 
+#[allow(clippy::trivially_copy_pass_by_ref)]
 pub fn as_int<S>(value: &bool, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
