@@ -58,8 +58,8 @@ impl Add for Types {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
-        let mut types = self.types;
-        types.extend(rhs.types);
+        let mut types = rhs.types;
+        types.extend(self.types);
         types.sort_by(|lhs, rhs| lhs.get_name().cmp(rhs.get_name()));
         types.dedup_by(|lhs, rhs| lhs.get_name().eq(rhs.get_name()));
         Self { types }
