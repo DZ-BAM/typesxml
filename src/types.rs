@@ -86,9 +86,3 @@ impl From<raw::Types> for Types {
         }
     }
 }
-
-impl From<Vec<Type>> for Types {
-    fn from(types: Vec<Type>) -> Self {
-        Self { types }
-    }
-}
