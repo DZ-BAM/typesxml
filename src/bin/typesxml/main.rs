@@ -30,7 +30,13 @@ fn main() {
                 println!("{typ}");
             }
         }
-        Action::Fix => write_type_or_exit(&read_types_or_exit(&args.file, false), Some(&args.file)),
+        Action::Fix => {
+            let types = &read_types_or_exit(&args.file, false);
+            types.write_to_xml_file_pretty(&args.file, ' ', 4).unwrap_or_else(|error| {
+                eprintln!("{error}");
+                exit(3);
+            });
+        }
         Action::Merge(merge) => write_type_or_exit(
             &(read_types_or_exit(&args.file, true) + read_types_or_exit(&merge.extension, true)),
             merge.output.as_deref(),

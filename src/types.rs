@@ -1,6 +1,8 @@
 use crate::{raw, Type};
+use serde::ser::Error;
 use serde::{Deserialize, Serialize};
-use serde_rw::{Error, FromFile};
+use serde_rw::{FromFile, ToXml};
+use std::fmt::{Display, Formatter};
 use std::ops::Add;
 use std::slice::{Iter, IterMut};
 
@@ -21,7 +23,7 @@ impl Types {
     ///
     /// # Errors
     /// Returns a `serde::rw::Error` if the deserialization fails.
-    pub fn read_gracefully(filename: &str) -> Result<Self, Error> {
+    pub fn read_gracefully(filename: &str) -> Result<Self, serde_rw::Error> {
         raw::Types::from_file(filename).map(Self::from)
     }
 
@@ -61,6 +63,12 @@ impl Add for Types {
         types.sort_by(|lhs, rhs| lhs.get_name().cmp(rhs.get_name()));
         types.dedup_by(|lhs, rhs| lhs.get_name().eq(rhs.get_name()));
         Self { types }
+    }
+}
+
+impl Display for Types {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.to_xml_pretty(' ', 4).map_err(std::fmt::Error::custom)?)
     }
 }
 
