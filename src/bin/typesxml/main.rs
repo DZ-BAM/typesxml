@@ -2,9 +2,9 @@ mod args;
 
 use args::{Action, Arguments, FieldValue, FlagValues};
 use clap::Parser;
-use serde_rw::{FromFile, ToFile, ToXml};
+use serde_rw::{FromFile, ToXml};
 use std::process::exit;
-use typesxml::{Type, Types};
+use typesxml::{Type, Types, XML_INDENT_CHAR, XML_INDENT_SIZE};
 
 fn main() {
     let args = Arguments::parse();
@@ -31,11 +31,7 @@ fn main() {
             }
         }
         Action::Fix => {
-            let types = &read_types_or_exit(&args.file, false);
-            types.write_to_xml_file_pretty(&args.file, ' ', 4).unwrap_or_else(|error| {
-                eprintln!("{error}");
-                exit(3);
-            });
+            write_type_or_exit(&read_types_or_exit(&args.file, false), Some(&args.file));
         }
         Action::Merge(merge) => write_type_or_exit(
             &(read_types_or_exit(&args.file, true) + read_types_or_exit(&merge.extension, true)),
@@ -150,8 +146,12 @@ fn read_types_or_exit(filename: &str, strict: bool) -> Types {
 fn write_type_or_exit(types: &Types, filename: Option<&str>) {
     filename
         .map_or_else(
-            || types.to_xml().map(|types| println!("{types}")),
-            |filename| types.write_to_file(filename),
+            || {
+                types
+                    .to_xml_pretty(XML_INDENT_CHAR, XML_INDENT_SIZE)
+                    .map(|types| println!("{types}"))
+            },
+            |filename| types.write_to_xml_file_pretty(filename, XML_INDENT_CHAR, XML_INDENT_SIZE),
         )
         .unwrap_or_else(|error| {
             eprintln!("{error}");
