@@ -153,21 +153,19 @@ impl From<raw::Type> for Type {
     fn from(raw: raw::Type) -> Self {
         Self {
             name: raw.name,
-            nominal: raw.nominal.and_then(|nominal| nominal.parse::<u8>().ok()),
+            nominal: raw.nominal.and_then(|s| s.parse::<u8>().ok()),
             lifetime: raw
                 .lifetime
-                .and_then(|lifetime| lifetime.parse::<u32>().ok())
+                .and_then(|s| s.parse::<u32>().ok())
                 .unwrap_or(0),
-            restock: raw.restock.and_then(|restock| restock.parse::<u32>().ok()),
-            min: raw.min.and_then(|min| min.parse::<u8>().ok()).unwrap_or(0),
-            quantmin: raw
-                .quantmin
-                .and_then(|quantmin| quantmin.parse::<i64>().ok()),
+            restock: raw.restock.and_then(|s| s.parse::<u32>().ok()),
+            min: raw.min.and_then(|s| s.parse::<u8>().ok()).unwrap_or(0),
+            quantmin: raw.quantmin.and_then(|s| s.parse::<i64>().ok()),
             quantmax: raw
                 .quantmax
-                .and_then(|quantmax| quantmax.parse::<i64>().ok())
+                .and_then(|s| s.parse::<i64>().ok())
                 .unwrap_or(0),
-            cost: raw.cost.and_then(|cost| cost.parse::<u32>().ok()),
+            cost: raw.cost.and_then(|s| s.parse::<u32>().ok()),
             flags: raw.flags.map_or_else(Flags::default, Flags::from),
             category: raw
                 .category
