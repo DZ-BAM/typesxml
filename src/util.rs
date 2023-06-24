@@ -15,11 +15,11 @@ where
 {
     write!(f, "{prefix}:\t[ ")?;
 
-    for (index, named) in items.iter().enumerate() {
+    for (index, item) in items.iter().enumerate() {
         write!(
             f,
             "{}{}",
-            named,
+            item,
             if index + 1 < items.len() { ", " } else { "" }
         )?;
     }
