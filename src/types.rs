@@ -1,4 +1,4 @@
-use crate::{raw, Type, XML_INDENT_CHAR, XML_INDENT_SIZE};
+use crate::{raw, Type};
 use serde::ser::Error;
 use serde::{Deserialize, Serialize};
 use serde_rw::{FromFile, ToXml};
@@ -71,7 +71,7 @@ impl Display for Types {
         write!(
             f,
             "{}",
-            self.to_xml_pretty(XML_INDENT_CHAR, XML_INDENT_SIZE)
+            self.to_xml_pretty(' ', 4)
                 .map_err(std::fmt::Error::custom)?
         )
     }

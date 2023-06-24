@@ -2,9 +2,9 @@ mod args;
 
 use args::{Action, Arguments, FieldValue, FlagValues};
 use clap::Parser;
-use serde_rw::{FromFile, ToXml};
+use serde_rw::{FromFile, ToFile};
 use std::process::exit;
-use typesxml::{Type, Types, XML_INDENT_CHAR, XML_INDENT_SIZE};
+use typesxml::{Type, Types};
 
 fn main() {
     let args = Arguments::parse();
@@ -144,17 +144,15 @@ fn read_types_or_exit(filename: &str, strict: bool) -> Types {
 }
 
 fn write_type_or_exit(types: &Types, filename: Option<&str>) {
-    filename
-        .map_or_else(
-            || {
-                types
-                    .to_xml_pretty(XML_INDENT_CHAR, XML_INDENT_SIZE)
-                    .map(|types| println!("{types}"))
-            },
-            |filename| types.write_to_xml_file_pretty(filename, XML_INDENT_CHAR, XML_INDENT_SIZE),
-        )
-        .unwrap_or_else(|error| {
-            eprintln!("{error}");
-            exit(3);
-        });
+    filename.map_or_else(
+        || println!("{types}"),
+        |filename| {
+            types
+                .write_to_file_pretty(filename)
+                .unwrap_or_else(|error| {
+                    eprintln!("{error}");
+                    exit(3);
+                });
+        },
+    );
 }
