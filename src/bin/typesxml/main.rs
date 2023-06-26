@@ -2,7 +2,7 @@ mod args;
 
 use args::{Action, Arguments, FieldValue, FlagValues};
 use clap::Parser;
-use serde_rw::{FromFile, ToFile};
+use serde_rw::{FromFile, ToFile, ToXml};
 use std::process::exit;
 use typesxml::{Type, Types};
 
@@ -60,6 +60,28 @@ fn main() {
                     set.output.as_deref()
                 },
             );
+        }
+        Action::Show(show) => {
+            read_types_or_exit(&args.file, true)
+                .types()
+                .find(|typ| typ.get_name().to_ascii_lowercase() == show.name.to_ascii_lowercase())
+                .map_or_else(
+                    || {
+                        eprintln!("No such type: {}", show.name);
+                    },
+                    |typ| {
+                        if show.xml {
+                            typ.to_xml_pretty(' ', 4).map_or_else(
+                                |_| eprintln!("Could not serialize XML"),
+                                |xml| {
+                                    println!("{xml}");
+                                },
+                            );
+                        } else {
+                            println!("{typ}");
+                        }
+                    },
+                );
         }
     }
 }

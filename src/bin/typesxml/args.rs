@@ -27,6 +27,8 @@ pub enum Action {
     Remove(Remove),
     #[command(long_about = "Set the selected type's properties")]
     Set(Set),
+    #[command(long_about = "Show the selected type")]
+    Show(Show),
 }
 
 #[derive(Clone, Debug, Subcommand)]
@@ -128,4 +130,12 @@ pub struct Set {
     pub(crate) output: Option<String>,
     #[arg(long, short, help = "Write result to the original file")]
     pub(crate) in_place: bool,
+}
+
+#[derive(Clone, Debug, Args)]
+pub struct Show {
+    #[arg(index = 1, name = "type")]
+    pub(crate) name: String,
+    #[arg(long, short, help = "Show type as XML")]
+    pub(crate) xml: bool,
 }
