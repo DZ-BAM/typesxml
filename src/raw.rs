@@ -6,6 +6,7 @@ pub struct Types {
     #[serde(rename = "type")]
     pub(crate) types: Option<Vec<Type>>,
 }
+
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 pub struct Type {
     #[serde(rename = "@name")]
