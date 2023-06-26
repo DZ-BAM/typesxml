@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename = "type")]
 pub struct Type {
     #[serde(rename = "@name")]
     name: String,
