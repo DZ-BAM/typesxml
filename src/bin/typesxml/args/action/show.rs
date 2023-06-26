@@ -1,4 +1,4 @@
-use crate::args::{read_types_or_exit, Arguments, Run};
+use crate::args::{read_types_or_exit, Arguments};
 use clap::Args;
 use serde_rw::ToXml;
 
@@ -10,8 +10,8 @@ pub struct Show {
     xml: bool,
 }
 
-impl Run for Show {
-    fn run(&self, args: &Arguments) {
+impl Show {
+    pub fn run(&self, args: &Arguments) {
         read_types_or_exit(args.file(), true)
             .types()
             .find(|typ| typ.get_name().to_ascii_lowercase() == self.name.to_ascii_lowercase())

@@ -1,4 +1,4 @@
-use crate::args::{Action, Run};
+use crate::args::Action;
 use clap::Parser;
 
 const DESCRIPTION: &str = "Manipulate types.xml files for DayZ servers.";

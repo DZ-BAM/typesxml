@@ -1,4 +1,4 @@
-use crate::args::{read_types_or_exit, Arguments, Run};
+use crate::args::{read_types_or_exit, Arguments};
 use clap::Args;
 use regex::Regex;
 use serde_rw::ToXml;
@@ -11,8 +11,8 @@ pub struct Find {
     xml: bool,
 }
 
-impl Run for Find {
-    fn run(&self, args: &Arguments) {
+impl Find {
+    pub fn run(&self, args: &Arguments) {
         for typ in read_types_or_exit(args.file(), true)
             .types()
             .filter(|typ| self.regex.is_match(typ.get_name()))

@@ -1,4 +1,4 @@
-use crate::args::{read_types_or_exit, write_type_or_exit, Arguments, Run};
+use crate::args::{read_types_or_exit, write_type_or_exit, Arguments};
 use clap::Args;
 use typesxml::Type;
 
@@ -12,8 +12,8 @@ pub struct Add {
     in_place: bool,
 }
 
-impl Run for Add {
-    fn run(&self, args: &Arguments) {
+impl Add {
+    pub fn run(&self, args: &Arguments) {
         let mut types = read_types_or_exit(args.file(), true);
         types.add(Type::new(&self.name));
         write_type_or_exit(

@@ -1,4 +1,4 @@
-use crate::args::{read_types_or_exit, write_type_or_exit, Arguments, Run};
+use crate::args::{read_types_or_exit, write_type_or_exit, Arguments};
 use clap::Args;
 
 #[derive(Clone, Debug, Args)]
@@ -9,8 +9,8 @@ pub struct Merge {
     output: Option<String>,
 }
 
-impl Run for Merge {
-    fn run(&self, args: &Arguments) {
+impl Merge {
+    pub fn run(&self, args: &Arguments) {
         write_type_or_exit(
             &(read_types_or_exit(args.file(), true) + read_types_or_exit(&self.extension, true)),
             self.output.as_deref(),

@@ -1,4 +1,4 @@
-use crate::args::{Arguments, Run};
+use crate::args::Arguments;
 use clap::Subcommand;
 
 mod add;
@@ -27,8 +27,8 @@ pub enum Action {
     Show(show::Show),
 }
 
-impl Run for Action {
-    fn run(&self, args: &Arguments) {
+impl Action {
+    pub fn run(&self, args: &Arguments) {
         match self {
             Self::Add(action) => action.run(args),
             Self::Find(action) => action.run(args),

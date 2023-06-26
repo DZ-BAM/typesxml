@@ -1,4 +1,4 @@
-use crate::args::{read_types_or_exit, write_type_or_exit, Arguments, Run};
+use crate::args::{read_types_or_exit, write_type_or_exit, Arguments};
 use clap::Args;
 
 #[derive(Clone, Debug, Args)]
@@ -11,8 +11,8 @@ pub struct Remove {
     in_place: bool,
 }
 
-impl Run for Remove {
-    fn run(&self, args: &Arguments) {
+impl Remove {
+    pub fn run(&self, args: &Arguments) {
         let mut types = read_types_or_exit(args.file(), true);
         types.remove(&self.name);
         write_type_or_exit(

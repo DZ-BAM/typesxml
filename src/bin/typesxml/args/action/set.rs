@@ -1,5 +1,5 @@
 use crate::args::FieldValue;
-use crate::args::{read_types_or_exit, set_value, write_type_or_exit, Arguments, Run};
+use crate::args::{read_types_or_exit, set_value, write_type_or_exit, Arguments};
 use clap::Args;
 
 #[derive(Clone, Debug, Args)]
@@ -14,8 +14,8 @@ pub struct Set {
     in_place: bool,
 }
 
-impl Run for Set {
-    fn run(&self, args: &Arguments) {
+impl Set {
+    pub fn run(&self, args: &Arguments) {
         let mut types = read_types_or_exit(args.file(), true);
         set_value(&mut types, &self.name, &self.field_value);
         write_type_or_exit(
