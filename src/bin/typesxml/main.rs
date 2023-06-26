@@ -27,7 +27,7 @@ fn main() {
                 .types()
                 .filter(|typ| find.regex.is_match(typ.get_name()))
             {
-                println!("{typ}");
+                println!("{typ}\n");
             }
         }
         Action::Fix => {
