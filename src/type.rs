@@ -29,9 +29,9 @@ pub struct Type {
 
 impl Type {
     #[must_use]
-    pub fn new(name: String) -> Self {
+    pub fn new(name: &str) -> Self {
         Self {
-            name,
+            name: name.to_string(),
             nominal: None,
             lifetime: 0,
             restock: None,
@@ -56,8 +56,8 @@ impl Type {
         &mut self.flags
     }
 
-    pub fn set_name(&mut self, name: String) {
-        self.name = name;
+    pub fn set_name(&mut self, name: &str) {
+        self.name = name.to_string();
     }
 
     pub fn set_nominal(&mut self, nominal: Option<u8>) {
@@ -92,16 +92,16 @@ impl Type {
         self.flags = flags;
     }
 
-    pub fn set_category(&mut self, category: Option<Named>) {
-        self.category = category;
+    pub fn set_category(&mut self, category: Option<&Named>) {
+        self.category = category.cloned();
     }
 
-    pub fn set_usages(&mut self, usages: Option<Vec<Named>>) {
-        self.usages = usages;
+    pub fn set_usages(&mut self, usages: Option<&[Named]>) {
+        self.usages = usages.map(Vec::from);
     }
 
-    pub fn set_values(&mut self, values: Option<Vec<Named>>) {
-        self.values = values;
+    pub fn set_values(&mut self, values: Option<&[Named]>) {
+        self.values = values.map(Vec::from);
     }
 }
 
