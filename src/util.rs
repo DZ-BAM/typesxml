@@ -24,7 +24,7 @@ where
         )?;
     }
 
-    writeln!(f, " ]")
+    write!(f, " ]")
 }
 
 pub fn parse_bool_or_false(string: &str) -> bool {
