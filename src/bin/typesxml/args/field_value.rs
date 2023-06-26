@@ -1,5 +1,5 @@
 use clap::Subcommand;
-use typesxml::Named;
+use typesxml::{Named, Type};
 
 #[derive(Clone, Debug, Subcommand)]
 pub enum FieldValue {
@@ -40,6 +40,25 @@ pub enum FieldValue {
     Values { values: Option<Vec<Named>> },
 }
 
+impl FieldValue {
+    pub fn set(&self, typ: &mut Type) {
+        match self {
+            Self::Name { name } => typ.set_name(name),
+            Self::Nominal { nominal } => typ.set_nominal(*nominal),
+            Self::Lifetime { lifetime } => typ.set_lifetime(*lifetime),
+            Self::Restock { restock } => typ.set_restock(*restock),
+            Self::Min { min } => typ.set_min(*min),
+            Self::Quantmin { quantmin } => typ.set_quantmin(*quantmin),
+            Self::Quantmax { quantmax } => typ.set_quantmax(*quantmax),
+            Self::Cost { cost } => typ.set_cost(*cost),
+            Self::Flags { flags } => flags.set(typ),
+            Self::Category { category } => typ.set_category(category.as_ref()),
+            Self::Usages { usages } => typ.set_usages(usages.as_deref()),
+            Self::Values { values } => typ.set_values(values.as_deref()),
+        }
+    }
+}
+
 #[derive(Clone, Debug, Subcommand)]
 pub enum FlagValues {
     #[command(long_about = "Includes items in cargo (backpacks, crates, cars).")]
@@ -54,4 +73,23 @@ pub enum FlagValues {
     Crafted { crafted: bool },
     #[command(long_about = "Dynamic event loot such as a heli crash.")]
     DeLoot { deloot: bool },
+}
+
+impl FlagValues {
+    fn set(&self, typ: &mut Type) {
+        match self {
+            Self::CountInCargo { count_in_cargo } => {
+                typ.mut_flags().set_count_in_cargo(*count_in_cargo);
+            }
+            Self::CountInHoarder { count_in_hoarder } => {
+                typ.mut_flags().set_count_in_hoarder(*count_in_hoarder);
+            }
+            Self::CountInMap { count_in_map } => typ.mut_flags().set_count_in_map(*count_in_map),
+            Self::CountInPlayer { count_in_player } => {
+                typ.mut_flags().set_count_in_player(*count_in_player);
+            }
+            Self::Crafted { crafted } => typ.mut_flags().set_crafted(*crafted),
+            Self::DeLoot { deloot } => typ.mut_flags().set_deloot(*deloot),
+        }
+    }
 }

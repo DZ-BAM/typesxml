@@ -6,4 +6,4 @@ mod functions;
 pub use action::Action;
 pub use arguments::Arguments;
 pub use field_value::{FieldValue, FlagValues};
-pub use functions::{read_types_or_exit, set_value, write_type_or_exit};
+pub use functions::{read_types_or_exit, write_type_or_exit};
