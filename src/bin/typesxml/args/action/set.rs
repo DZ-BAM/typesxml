@@ -2,7 +2,6 @@ use crate::args::FieldValue;
 use crate::args::{read_types_or_exit, write_type_or_exit, Arguments};
 use clap::Args;
 use std::process::exit;
-use typesxml::Types;
 
 #[derive(Clone, Debug, Args)]
 pub struct Set {
@@ -19,18 +18,6 @@ pub struct Set {
 impl Set {
     pub fn run(&self, args: &Arguments) {
         let mut types = read_types_or_exit(args.file(), true);
-        self.set(&mut types);
-        write_type_or_exit(
-            &types,
-            if self.in_place {
-                Some(args.file())
-            } else {
-                self.output.as_deref()
-            },
-        );
-    }
-
-    fn set(&self, types: &mut Types) {
         types
             .mut_types()
             .find(|typ| typ.get_name().to_ascii_lowercase() == self.name.to_ascii_lowercase())
@@ -41,5 +28,13 @@ impl Set {
                 },
                 |typ| self.field_value.set(typ),
             );
+        write_type_or_exit(
+            &types,
+            if self.in_place {
+                Some(args.file())
+            } else {
+                self.output.as_deref()
+            },
+        );
     }
 }
