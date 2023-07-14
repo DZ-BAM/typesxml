@@ -15,4 +15,4 @@ publish = false
 clap = { "version" = "4.2.6", features = ["derive"] }
 regex = "1.8.4"
 serde = { version = "1.0.164", features = ["derive"] }
-serde_rw = { version = "0.2.7", features = ["xml"] }
+serde_rw = { version = "0.3.0", features = ["xml"] }
