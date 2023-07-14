@@ -13,7 +13,7 @@ pub fn fmt_slice<T>(f: &mut Formatter<'_>, prefix: &str, items: &[T]) -> std::fm
 where
     T: Display,
 {
-    write!(f, "{prefix}:\t[ ")?;
+    write!(f, "{prefix}[ ")?;
 
     for (index, item) in items.iter().enumerate() {
         write!(

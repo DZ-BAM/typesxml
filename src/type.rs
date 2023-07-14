@@ -139,13 +139,11 @@ impl Display for Type {
         }
 
         if let Some(usages) = &self.usages {
-            writeln!(f)?;
-            fmt_slice(f, "usages  ", usages)?;
+            fmt_slice(f, "\nusages  :\t", usages)?;
         }
 
         if let Some(values) = &self.values {
-            writeln!(f)?;
-            fmt_slice(f, "values  ", values)?;
+            fmt_slice(f, "\nvalues  :\t", values)?;
         }
 
         Ok(())
