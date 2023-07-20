@@ -1,7 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::convert::Infallible;
 use std::fmt::{Display, Formatter};
-use std::str::FromStr;
 
 #[derive(Clone, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct Named {
@@ -27,12 +25,8 @@ impl Display for Named {
     }
 }
 
-impl FromStr for Named {
-    type Err = Infallible;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self {
-            name: s.to_string(),
-        })
+impl From<String> for Named {
+    fn from(name: String) -> Self {
+        Self { name }
     }
 }
