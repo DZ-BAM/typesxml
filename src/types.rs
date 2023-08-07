@@ -23,7 +23,7 @@ impl Types {
     ///
     /// # Errors
     /// Returns a `serde::rw::Error` if the deserialization fails.
-    pub fn read_gracefully(filename: &str) -> Result<Self, serde_rw::Error> {
+    pub fn read_gracefully(filename: &str) -> Result<Self, anyhow::Error> {
         raw::Types::from_file(filename).map(Self::from)
     }
 
