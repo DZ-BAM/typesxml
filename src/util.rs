@@ -18,8 +18,7 @@ where
     for (index, item) in items.iter().enumerate() {
         write!(
             f,
-            "{}{}",
-            item,
+            "{item}{}",
             if index + 1 < items.len() { ", " } else { "" }
         )?;
     }
