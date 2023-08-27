@@ -134,15 +134,15 @@ impl Display for Type {
 
         write!(f, "\nflags   :\t{}", self.flags)?;
 
-        if let Some(category) = &self.category {
+        if let Some(ref category) = self.category {
             write!(f, "\ncategory:\t{}", category.name())?;
         }
 
-        if let Some(usages) = &self.usages {
+        if let Some(ref usages) = self.usages {
             fmt_slice(f, "\nusages  :\t", usages)?;
         }
 
-        if let Some(values) = &self.values {
+        if let Some(ref values) = self.values {
             fmt_slice(f, "\nvalues  :\t", values)?;
         }
 
