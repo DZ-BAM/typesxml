@@ -5,7 +5,7 @@ edition = "2021"
 description = "A types.xml library and XML files manipulation utility"
 license = "MIT"
 repository = "https://github.com/DZ-BAM/typesxml"
-keywords = ["types.xml", "DayZ"]
+keywords = ["types", "xml", "DayZ"]
 categories = ["command-line-utilities"]
 publish = false
 
