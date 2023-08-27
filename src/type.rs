@@ -49,7 +49,7 @@ impl Type {
 
     #[must_use]
     pub fn get_name(&self) -> &str {
-        &self.name
+        self.name.as_str()
     }
 
     #[must_use]
