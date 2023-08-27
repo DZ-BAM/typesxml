@@ -4,11 +4,11 @@ use clap::Parser;
 const DESCRIPTION: &str = "Manipulate types.xml files for DayZ servers.";
 
 #[derive(Debug, Parser)]
-#[command(author, version, about, long_about = DESCRIPTION)]
+#[command(author, version, about, long_about = DESCRIPTION, subcommand_value_name = "action", subcommand_help_heading = "Actions")]
 pub struct Arguments {
     #[arg(index = 1, name = "xml_file", help = "The base XML file to operate on")]
     file: String,
-    #[command(subcommand, name = "action")]
+    #[command(subcommand)]
     action: Action,
 }
 
