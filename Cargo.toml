@@ -17,3 +17,9 @@ clap = { "version" = "4.4.0", features = ["derive"] }
 regex = "1.9.4"
 serde = { version = "1.0.188", features = ["derive"] }
 serde_rw = { version = "0.4.0", features = ["xml"] }
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"
